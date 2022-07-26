@@ -1,0 +1,31 @@
+import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
+import { FixedIntegerRangeEncoder } from "../../encoder/FixedIntegerRangeEncoder";
+import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+
+export class EncodableFixedIntegerRange extends AbstractEncodableDataType<number[]> {
+  constructor(value?: number[]) {
+    super(value);
+  }
+
+  public encode(): string {
+    return FixedIntegerRangeEncoder.encode(this.value);
+  }
+
+  public decode(bitString: string) {
+    this.value = FixedIntegerRangeEncoder.decode(bitString);
+  }
+
+  public substring(bitString: string, fromIndex: number): string {
+    //TODO: add some validation
+    let count = FixedIntegerEncoder.decode(bitString.substring(fromIndex, fromIndex + 12));
+    let index = fromIndex + 12;
+    for (let i = 0; i < count; i++) {
+      if (bitString.charAt(index) == "1") {
+        index += 33;
+      } else {
+        index += 17;
+      }
+    }
+    return bitString.substring(fromIndex, index);
+  }
+}

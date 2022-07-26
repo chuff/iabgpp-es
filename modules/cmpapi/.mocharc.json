@@ -1,0 +1,26 @@
+{
+  "require": ["ts-node/register", "jsdom-global/register", "source-map-support/register"],
+  "node-option": ["experimental-specifier-resolution=node", "loader=ts-node/esm"],
+  "spec": [
+    "./test/datatype/EncodableBoolean.test.ts",
+    "./test/datatype/EncodableDatetime.test.ts",
+    "./test/datatype/EncodableFibonacciInteger.test.ts",
+    "./test/datatype/EncodableFibonacciIntegerRange.test.ts",
+    "./test/datatype/EncodableFixedBitfield.test.ts",
+    "./test/datatype/EncodableFixedInteger.test.ts",
+    "./test/datatype/EncodableFixedIntegerRange.test.ts",
+    "./test/datatype/EncodableFixedString.test.ts",
+    "./test/encoder/Base64UrlEncoder.test.ts",
+    "./test/encoder/BooleanEncoder.test.ts",
+    "./test/encoder/DatetimeEncoder.test.ts",
+    "./test/encoder/FibonacciIntegerEncoder.test.ts",
+    "./test/encoder/FibonacciIntegerRangeEncoder.test.ts",
+    "./test/encoder/FixedBitfieldEncoder.test.ts",
+    "./test/encoder/FixedIntegerEncoder.test.ts",
+    "./test/encoder/FixedIntegerRangeEncoder.test.ts",
+    "./test/encoder/FixedStringEncoder.test.ts",
+    "./test/manifest/section/HeaderV1.test.ts",
+    "./test/manifest/section/TcfEuV2.test.ts",
+    "./test/manifest/section/UspV1.test.ts"
+  ]
+}
