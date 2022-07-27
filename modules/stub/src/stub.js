@@ -1,133 +1,102 @@
-(function () {
-  const makeStub = () => {
-    const GPP_LOCATOR_NAME = "__gppLocator";
-    const queue = [];
-    const currentWindow = window;
-    let frameLocator = currentWindow;
-    let cmpFrame;
-
-    function addFrame() {
-      const doc = currentWindow.document;
-      const otherCMP = !!currentWindow.frames[GPP_LOCATOR_NAME];
-
-      if (!otherCMP) {
-        if (doc.body) {
-          const iframe = doc.createElement("iframe");
-
-          iframe.style.cssText = "display:none";
-          iframe.name = GPP_LOCATOR_NAME;
-          doc.body.appendChild(iframe);
-        } else {
-          setTimeout(addFrame, 5);
-        }
-      }
-
-      return !otherCMP;
+window.__gpp_addFrame = function (n) {
+  if (!window.frames[n]) {
+    if (document.body) {
+      var i = document.createElement("iframe");
+      i.style.cssText = "display:none";
+      i.name = n;
+      document.body.appendChild(i);
+    } else {
+      window.setTimeout(window.__gppaddFrame, 10, n);
     }
-
-    function gppHandler(...args) {
-      if (!args.length) {
-        /**
-         * shortcut to get the queue when the full CMP
-         * implementation loads; it can call gppHandler()
-         * with no arguments to get the queued arguments
-         */
-
-        return queue;
-      } else if (args[0] === "ping") {
-        /**
-         * Only supported method; give PingReturn
-         * object as response
-         */
-        if (typeof args[2] === "function") {
-          args[2]({
-            cmpLoaded: false,
-            cmpStatus: "stub",
-          });
-        }
-      } else {
-        /**
-         * some other method, just queue it for the
-         * full CMP implementation to deal with
-         */
-        queue.push(args);
-      }
+  }
+};
+window.__gpp_stub = function () {
+  var b = arguments;
+  __gpp.queue = __gpp.queue || [];
+  if (!b.length) {
+    return __gpp.queue;
+  }
+  var cmd = b[0];
+  var clb = b.length > 1 ? b[1] : null;
+  var par = b.length > 2 ? b[2] : null;
+  if (cmd === "ping") {
+    return {
+      gppVersion: "1.0", // must be “Version.Subversion”, current: “1.0”
+      cmpStatus: "stub", // possible values: stub, loading, loaded, error
+      cmpDisplayStatus: "hidden", // possible values: hidden, visible, disabled
+      apiSupport: ["tcfeuv2", "tcfcav2", "uspv1"], // list of supported APIs
+      currentAPI: "", // name of detected API once CMP is loaded
+      cmpId: 0, // IAB assigned CMP ID, may be 0 during stub/loading
+    };
+  } else if (cmd === "addEventListener") {
+    __gpp.events = __gpp.events || [];
+    if (!("lastId" in __gpp)) {
+      __gpp.lastId = 0;
     }
-
-    function postMessageEventHandler(event) {
-      const msgIsString = typeof event.data === "string";
-      let json = {};
-
-      if (msgIsString) {
-        try {
-          /**
-           * Try to parse the data from the event.  This is important
-           * to have in a try/catch because often messages may come
-           * through that are not JSON
-           */
-          json = JSON.parse(event.data);
-        } catch (ignore) {}
-      } else {
-        json = event.data;
-      }
-
-      const payload = typeof json === "object" ? json.__gppCall : null;
-
-      if (payload) {
-        window.__gpp(
-          payload.command,
-          payload.version,
-          function (retValue, success) {
-            let returnMsg = {
-              __gppReturn: {
-                returnValue: retValue,
-                success: success,
-                callId: payload.callId,
-              },
-            };
-
-            if (event && event.source && event.source.postMessage) {
-              event.source.postMessage(msgIsString ? JSON.stringify(returnMsg) : returnMsg, "*");
-            }
-          },
-          payload.parameter
-        );
-      }
-    }
-
-    /**
-     * Iterate up to the top window checking for an already-created
-     * "__gpplLocator" frame on every level. If one exists already then we are
-     * not the master CMP and will not queue commands.
-     */
-    while (frameLocator) {
-      try {
-        if (frameLocator.frames[GPP_LOCATOR_NAME]) {
-          cmpFrame = frameLocator;
-          break;
-        }
-      } catch (ignore) {}
-
-      // if we're at the top and no cmpFrame
-      if (frameLocator === currentWindow.top) {
+    __gpp.lastId++;
+    var lnr = __gpp.lastId;
+    __gpp.events.push({
+      id: lnr,
+      callback: clb,
+      parameter: par,
+    });
+    return {
+      eventName: "listenerRegistered",
+      listenerId: lnr, // Registered ID of the listener
+      data: true, // positive signal
+    };
+  } else if (cmd === "removeEventListener") {
+    var success = false;
+    __gpp.events = __gpp.events || [];
+    for (var i = 0; i < __gpp.events.length; i++) {
+      if (__gpp.events[i].id == par) {
+        __gpp.events[i].splice(i, 1);
+        success = true;
         break;
       }
-
-      // Move up
-      frameLocator = frameLocator.parent;
     }
-
-    if (!cmpFrame) {
-      // we have recur'd up the windows and have found no __gppLocator frame
-      addFrame();
-      currentWindow.__gpp = gppHandler;
-      currentWindow.addEventListener("message", postMessageEventHandler, false);
-    }
-  };
-
-  if (typeof module !== "undefined") {
-    module.exports = makeStub;
-  } else {
-    makeStub();
+    return {
+      eventName: "listenerRemoved",
+      listenerId: par, // Registered ID of the listener
+      data: success, // status info
+    };
   }
-})();
+  //these commands must not be queued but may return null while in stub-mode
+  else if (cmd === "hasSection" || cmd === "getSection" || cmd === "getField" || cmd === "getGPPString") {
+    return null;
+  }
+  //queue all other commands
+  else {
+    __gpp.queue.push([].slice.apply(b));
+  }
+};
+window.__gpp_msghandler = function (event) {
+  var msgIsString = typeof event.data === "string";
+  try {
+    var json = msgIsString ? JSON.parse(event.data) : event.data;
+  } catch (e) {
+    var json = null;
+  }
+  if (typeof json === "object" && json !== null && "__gppCall" in json) {
+    var i = json.__gppCall;
+    window.__gpp(
+      i.command,
+      function (retValue, success) {
+        var returnMsg = {
+          __gppReturn: {
+            returnValue: retValue,
+            success: success,
+            callId: i.callId,
+          },
+        };
+        event.source.postMessage(msgIsString ? JSON.stringify(returnMsg) : returnMsg, "*");
+      },
+      i.parameter
+    );
+  }
+};
+if (!("__gpp" in window) || typeof window.__gpp !== "function") {
+  window.__gpp = window.__gpp_stub;
+  window.addEventListener("message", window.__gpp_msghandler, false);
+  window.__gpp_addFrame("__gppLocator");
+}

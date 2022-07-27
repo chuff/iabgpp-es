@@ -1,32 +1,37 @@
-[![NPM version](https://img.shields.io/npm/v/@iabtcf/stub.svg?style=flat-square)](https://www.npmjs.com/package/@iabtcf/stub)
-[![npm module downloads per month](http://img.shields.io/npm/dm/@iabtcf/stub.svg?style=flat)](https://www.npmjs.org/package/@iabtcf/stub)
-[![InteractiveAdvertisingBureau](https://circleci.com/gh/InteractiveAdvertisingBureau/iabtcf-es.svg?style=shield)](https://circleci.com/gh/InteractiveAdvertisingBureau/iabtcf-es)
+[![NPM version](https://img.shields.io/npm/v/@iabgpp/stub.svg?style=flat-square)](https://www.npmjs.com/package/@iabgpp/stub)
+[![npm module downloads per month](http://img.shields.io/npm/dm/@iabgpp/stub.svg?style=flat)](https://www.npmjs.org/package/@iabgpp/stub)
+[![InteractiveAdvertisingBureau](https://circleci.com/gh/InteractiveAdvertisingBureau/iabgpp-es.svg?style=shield)](https://circleci.com/gh/InteractiveAdvertisingBureau/iabgpp-es)
 
-# @iabtcf/stub
+# @iabgpp/stub
 
-Cmp API Stub code.  Maybe included in commonjs loader or dropped directly on the page.
+Cmp API Stub code. Maybe included in commonjs loader or dropped directly on the page.
 
 #### Installation
 
 npm
+
 ```
-npm install @iabtcf/stub
+npm install @iabgpp/stub
 ```
 
 yarn
+
 ```
-yarn add @iabtcf/stub
+yarn add @iabgpp/stub
 ```
+
 #### Using
 
 ##### include via module loading
+
 ```javascript
-import * as cmpstub from '@iabtcf/stub';
+import * as cmpstub from "@iabgpp/stub";
 ```
+
 or
 
 ```javascript
-const cmpstub = require('@iabtcf/stub');
+const cmpstub = require("@iabgpp/stub");
 ```
 
 then execute:
@@ -34,13 +39,15 @@ then execute:
 ```javascript
 cmpstub();
 ```
-this should generate the `__tcfapi()` window function with the queing functionality.
+
+this should generate the `__gpp()` window function with the queing functionality.
 
 ##### to drop on a page
-```
-git clone https://github.com/InteractiveAdvertisingBureau/iabtcf-es.git
 
-cd iabtcf-es/modules/stub/
+```
+git clone https://github.com/InteractiveAdvertisingBureau/iabgpp-es.git
+
+cd iabgpp-es/modules/stub/
 
 yarn // or npm install
 
@@ -52,6 +59,5 @@ Built stub will be output to ./lib
 ##### Getting queue of commands
 
 ```javascript
-const queue = __tcfapi();
-console.log(queue); // [ ['command', 2, callback], ...]
+console.log(__gpp("ping"));
 ```
