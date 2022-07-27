@@ -12,7 +12,7 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [
-      "es2015", "DOM"
+      "es2016", "DOM"
     ]
   },
   "exclude": [

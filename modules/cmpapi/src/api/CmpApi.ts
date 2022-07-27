@@ -8,7 +8,6 @@ import { GppModel } from "../manifest/GppModel";
 
 export class CmpApi {
   private callResponder: CallResponder;
-  private isServiceSpecific: boolean;
   private numUpdates = 0;
 
   /**
@@ -17,14 +16,13 @@ export class CmpApi {
    * @param {boolean} isServiceSpecific - whether or not this cmp is configured to be service specific
    * @param {CustomCommands} [customCommands] - custom commands from the cmp
    */
-  public constructor(cmpId: number, cmpVersion: number, isServiceSpecific = false, customCommands?: CustomCommands) {
+  public constructor(cmpId: number, cmpVersion: number, customCommands?: CustomCommands) {
     this.throwIfInvalidInt(cmpId, "cmpId", 2);
     this.throwIfInvalidInt(cmpVersion, "cmpVersion", 0);
 
     CmpApiModel.cmpId = cmpId;
     CmpApiModel.cmpVersion = cmpVersion;
 
-    this.isServiceSpecific = !!isServiceSpecific;
     this.callResponder = new CallResponder(customCommands);
   }
 
@@ -38,7 +36,7 @@ export class CmpApi {
    * update - When the state of a CMP changes this function should be called
    * with the updated tc string and whether or not the UI is visible or not
    *
-   * @param {string|null} encodedTCString - set a string to signal that
+   * @param {string|null} encodedGppString - set a string to signal that
    * gdprApplies and that an encoded tc string is being passed.  If GDPR does
    * not apply, set to null.
    * @param {boolean} uiVisible - default false.  set to true if the ui is

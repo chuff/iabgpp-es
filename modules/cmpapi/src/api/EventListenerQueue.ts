@@ -1,4 +1,5 @@
 import { CommandCallback } from "./command/CommandCallback";
+import { GetGppDataCommand } from "./command/GetGppDataCommand";
 
 interface EventItem {
   callback: CommandCallback;
@@ -22,7 +23,7 @@ export class EventListenerQueue {
 
   public exec(): void {
     this.eventQueue.forEach((eventItem: EventItem, listenerId: number): void => {
-      //new GetTCDataCommand(eventItem.callback, eventItem.param, listenerId, eventItem.next);
+      new GetGppDataCommand(eventItem.callback, eventItem.param, listenerId, eventItem.next);
     });
   }
 

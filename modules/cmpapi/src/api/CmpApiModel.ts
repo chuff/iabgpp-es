@@ -7,7 +7,7 @@ import { TcfEuV2 } from "../manifest/section/TcfEuV2";
 import { UspV1 } from "../manifest/section/UspV1";
 
 /**
- * Class holds shareable data across cmp api and provides change event listener for TcModel.
+ * Class holds shareable data across cmp api and provides change event listener for GppModel.
  * Within the context of the CmpApi, this class acts much like a global state or database,
  * where CmpApi sets data and Commands read the data.
  */

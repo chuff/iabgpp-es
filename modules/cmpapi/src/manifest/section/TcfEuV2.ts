@@ -115,13 +115,25 @@ export class TcfEuV2 extends AbstractEncodableSection {
 
   // Override
   public encode() {
+    let isServiceSpecific = this.getFieldValue("isServiceSpecific");
+
     let segmentBitStrings = this.encodeSegmentsToBitStrings();
     let base64EncodedSegments = [];
-    for (let i = 0; i < segmentBitStrings.length; i++) {
-      if (segmentBitStrings[i] && segmentBitStrings[i].length > 0) {
-        base64EncodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[i]));
+    base64EncodedSegments.push(segmentBitStrings[0]);
+    if (this.getFieldValue("isServiceSpecific")) {
+      if (segmentBitStrings[1] && segmentBitStrings[1].length > 0) {
+        base64EncodedSegments.push(segmentBitStrings[1]);
+      }
+    } else {
+      if (segmentBitStrings[2] && segmentBitStrings[2].length > 0) {
+        base64EncodedSegments.push(segmentBitStrings[2]);
+      }
+
+      if (segmentBitStrings[3] && segmentBitStrings[3].length > 0) {
+        base64EncodedSegments.push(segmentBitStrings[3]);
       }
     }
+
     return base64EncodedSegments.join(".");
   }
 

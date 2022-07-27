@@ -1,5 +1,5 @@
-import { IntMap } from "./IntMap";
 import { Feature } from "./Feature";
+import { IntMap } from "./IntMap";
 import { Purpose } from "./Purpose";
 import { Stack } from "./Stack";
 

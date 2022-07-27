@@ -1,4 +1,4 @@
-export class GvlClient {
+export class JsonHttpClient {
   private static absCall(url: string, body: string | null, sendCookies: boolean, timeout: number): Promise<object> {
     return new Promise((resolve: (response: object) => void, reject: (error: Error) => void): void => {
       const req: XMLHttpRequest = new XMLHttpRequest();

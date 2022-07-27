@@ -3,7 +3,7 @@
     "rootDir": "src",
     "outDir": "lib/cjs",
     "module": "commonjs",
-    "target": "es2015",
+    "target": "es2016",
     "moduleResolution": "node",
     "downlevelIteration": true,
     "esModuleInterop": true,
@@ -12,7 +12,7 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [
-      "es2015", "DOM"
+      "es2016", "DOM"
     ]
   },
   "exclude": [

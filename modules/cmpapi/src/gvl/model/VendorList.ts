@@ -1,6 +1,6 @@
+import { Declarations } from "./Declarations";
 import { IntMap } from "./IntMap";
 import { Vendor } from "./Vendor";
-import { Declarations } from "./Declarations";
 
 export interface VendorList extends Declarations {
   lastUpdated: string | Date;

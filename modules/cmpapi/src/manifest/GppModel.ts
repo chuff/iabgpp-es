@@ -72,4 +72,16 @@ export class GppModel {
       }
     }
   }
+
+  public toObject() {
+    let obj = [];
+    for (let i = 0; i < this.sectionOrder.length; i++) {
+      let sectionName = this.sectionOrder[i];
+      if (this.sections.has(sectionName)) {
+        obj[sectionName] = this.sections.get(sectionName).toObject();
+      }
+    }
+
+    return obj;
+  }
 }
