@@ -1,23 +1,23 @@
-import { AbstractEncodableDataType } from "../datatype/AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType";
 import { EncodableBoolean } from "../datatype/EncodableBoolean";
 import { EncodableDatetime } from "../datatype/EncodableDatetime";
 import { EncodableFlexibleBitfield } from "../datatype/EncodableFlexibleBitfield";
 import { EncodableFixedBitfield } from "../datatype/EncodableFixedBitfield";
 import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger";
 import { EncodableFixedString } from "../datatype/EncodableFixedString";
-import { AbstractEncodableSection } from "./AbstractEncodableSection";
+import { AbstractEncodableSegmentedBitStringSection } from "./AbstractEncodableSegmentedBitStringSection";
 import { EncodableFixedIntegerRange } from "../datatype/EncodableFixedIntegerRange";
 import { EncodableOptimizedFixedRange } from "../datatype/EncodableOptimizedFixedRange";
 import { DecodingError } from "../../error/DecodingError";
 import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder";
 
-export class TcfEuV2 extends AbstractEncodableSection {
+export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
   public static readonly ID = 5;
   public static readonly VERSION = 2;
   public static readonly NAME = "tcfeuv2";
 
-  constructor(base64EncodedString?: string) {
-    let fields = new Map<string, AbstractEncodableDataType<any>>();
+  constructor(encodedString?: string) {
+    let fields = new Map<string, AbstractEncodableBitStringDataType<any>>();
 
     // core section
     fields.set("version", new EncodableFixedInteger(6, TcfEuV2.VERSION));
@@ -108,40 +108,38 @@ export class TcfEuV2 extends AbstractEncodableSection {
 
     super(fields, segments);
 
-    if (base64EncodedString && base64EncodedString.length > 0) {
-      this.decode(base64EncodedString);
+    if (encodedString && encodedString.length > 0) {
+      this.decode(encodedString);
     }
   }
 
-  // Override
-  public encode() {
-    let isServiceSpecific = this.getFieldValue("isServiceSpecific");
-
+  //Overriden
+  public encode(): string {
     let segmentBitStrings = this.encodeSegmentsToBitStrings();
-    let base64EncodedSegments = [];
-    base64EncodedSegments.push(segmentBitStrings[0]);
+    let encodedSegments = [];
+    encodedSegments.push(segmentBitStrings[0]);
     if (this.getFieldValue("isServiceSpecific")) {
       if (segmentBitStrings[1] && segmentBitStrings[1].length > 0) {
-        base64EncodedSegments.push(segmentBitStrings[1]);
+        encodedSegments.push(segmentBitStrings[1]);
       }
     } else {
       if (segmentBitStrings[2] && segmentBitStrings[2].length > 0) {
-        base64EncodedSegments.push(segmentBitStrings[2]);
+        encodedSegments.push(segmentBitStrings[2]);
       }
 
       if (segmentBitStrings[3] && segmentBitStrings[3].length > 0) {
-        base64EncodedSegments.push(segmentBitStrings[3]);
+        encodedSegments.push(segmentBitStrings[3]);
       }
     }
 
-    return base64EncodedSegments.join(".");
+    return encodedSegments.join(".");
   }
 
-  // Override
-  public decode(base64EncodedSection: string) {
-    let base64EncodedSegments = base64EncodedSection.split(".");
+  //Overriden
+  public decode(encodedSection: string): void {
+    let encodedSegments = encodedSection.split(".");
     let segmentBitStrings = [];
-    for (let i = 0; i < base64EncodedSegments.length; i++) {
+    for (let i = 0; i < encodedSegments.length; i++) {
       /**
        * first char will contain 6 bits, we only need the first 3. In version 1
        * and 2 of the TC string there is no segment type for the CORE string.
@@ -149,7 +147,7 @@ export class TcfEuV2 extends AbstractEncodableSection {
        * because we're only on a maximum of encoding version 2 the first 3 bits
        * in the core segment will evaluate to 0.
        */
-      let segmentBitString = Base64UrlEncoder.decode(base64EncodedSegments[i]);
+      let segmentBitString = Base64UrlEncoder.decode(encodedSegments[i]);
       switch (segmentBitString.substring(0, 3)) {
         // unfortunately, the segment ordering doesn't match the segment ids
         case "000": {
@@ -169,7 +167,7 @@ export class TcfEuV2 extends AbstractEncodableSection {
           break;
         }
         default: {
-          throw new DecodingError("Unable to decode segment '" + base64EncodedSegments[i] + "'");
+          throw new DecodingError("Unable to decode segment '" + encodedSegments[i] + "'");
         }
       }
     }

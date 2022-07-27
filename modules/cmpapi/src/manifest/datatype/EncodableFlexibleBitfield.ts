@@ -1,7 +1,7 @@
 import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableFlexibleBitfield extends AbstractEncodableDataType<number[]> {
+export class EncodableFlexibleBitfield extends AbstractEncodableBitStringDataType<number[]> {
   private getLength: Function;
 
   constructor(getLength: () => number, value?: number[]) {

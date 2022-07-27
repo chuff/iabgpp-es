@@ -1,7 +1,7 @@
 import { BooleanEncoder } from "../../encoder/BooleanEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableBoolean extends AbstractEncodableDataType<boolean> {
+export class EncodableBoolean extends AbstractEncodableBitStringDataType<boolean> {
   constructor(value?: boolean) {
     super(value);
   }

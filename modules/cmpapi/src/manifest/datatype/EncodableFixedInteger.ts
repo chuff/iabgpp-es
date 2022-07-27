@@ -1,7 +1,7 @@
 import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableFixedInteger extends AbstractEncodableDataType<number> {
+export class EncodableFixedInteger extends AbstractEncodableBitStringDataType<number> {
   private bitStringLength: number;
 
   constructor(bitStringLength: number, value?: number) {

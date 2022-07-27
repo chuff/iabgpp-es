@@ -1,4 +1,4 @@
-export abstract class AbstractEncodableDataType<T> {
+export abstract class AbstractEncodableBitStringDataType<T> {
   protected value: T;
 
   constructor(value?: T) {

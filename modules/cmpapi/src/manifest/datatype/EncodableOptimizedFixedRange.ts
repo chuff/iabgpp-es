@@ -1,10 +1,10 @@
 import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder";
 import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
 import { FixedIntegerRangeEncoder } from "../../encoder/FixedIntegerRangeEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 import { EncodableFixedIntegerRange } from "./EncodableFixedIntegerRange";
 
-export class EncodableOptimizedFixedRange extends AbstractEncodableDataType<number[]> {
+export class EncodableOptimizedFixedRange extends AbstractEncodableBitStringDataType<number[]> {
   constructor(value?: number[]) {
     super(value);
   }

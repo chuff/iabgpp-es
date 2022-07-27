@@ -1,4 +1,4 @@
-import { AbstractEncodableSection } from "../../manifest/section/AbstractEncodableSection";
+import { AbstractEncodableSection } from "../../manifest/section/AbstractEncodableBitStringSection";
 import { CmpApiModel } from "../CmpApiModel";
 import { Command } from "./Command";
 

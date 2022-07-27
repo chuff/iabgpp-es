@@ -1,7 +1,7 @@
 import { DatetimeEncoder } from "../../encoder/DatetimeEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableDatetime extends AbstractEncodableDataType<Date> {
+export class EncodableDatetime extends AbstractEncodableBitStringDataType<Date> {
   constructor(value?: Date) {
     super(value);
   }

@@ -1,11 +1,11 @@
 import { EncodingError } from "../error/EncodingError";
-import { AbstractEncodableSection } from "./section/AbstractEncodableSection";
+import { EncodableSection } from "./section/EncodableSection";
 import { HeaderV1 } from "./section/HeaderV1";
 import { TcfEuV2 } from "./section/TcfEuV2";
 import { UspV1 } from "./section/UspV1";
 
 export class GppModel {
-  private sections = new Map<string, AbstractEncodableSection>();
+  private sections = new Map<string, EncodableSection>();
   private sectionOrder: string[];
 
   constructor(base64EncodedString?: string) {
@@ -16,7 +16,7 @@ export class GppModel {
     }
   }
 
-  public setSection(sectionName: string, section: AbstractEncodableSection) {
+  public setSection(sectionName: string, section: EncodableSection) {
     this.sections.set(sectionName, section);
   }
 

@@ -1,7 +1,7 @@
 import { FixedStringEncoder } from "../../encoder/FixedStringEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableFixedString extends AbstractEncodableDataType<string> {
+export class EncodableFixedString extends AbstractEncodableBitStringDataType<string> {
   private stringLength: number;
 
   constructor(stringLength: number, value?: string) {

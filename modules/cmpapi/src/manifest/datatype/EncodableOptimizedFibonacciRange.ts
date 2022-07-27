@@ -1,10 +1,10 @@
 import { FibonacciIntegerRangeEncoder } from "../../encoder/FibonacciIntegerRangeEncoder";
 import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder";
 import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 import { EncodableFibonacciIntegerRange } from "./EncodableFibonacciIntegerRange";
 
-export class EncodableOptimizedFibonacciRange extends AbstractEncodableDataType<number[]> {
+export class EncodableOptimizedFibonacciRange extends AbstractEncodableBitStringDataType<number[]> {
   constructor(value?: number[]) {
     super(value);
   }

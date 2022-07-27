@@ -22,6 +22,7 @@
     "./test/manifest/section/HeaderV1.test.ts",
     "./test/manifest/section/TcfEuV2.test.ts",
     "./test/manifest/section/UspV1.test.ts",
+    "./test/manifest/section/UspV1Legacy.test.ts",
     "./test/gvl/client/JsonHttpClient.test.ts",
     "./test/gvl/Gvl.test.ts"
   ]

@@ -1,8 +1,8 @@
 import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
 import { FixedIntegerRangeEncoder } from "../../encoder/FixedIntegerRangeEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableFixedIntegerRange extends AbstractEncodableDataType<number[]> {
+export class EncodableFixedIntegerRange extends AbstractEncodableBitStringDataType<number[]> {
   constructor(value?: number[]) {
     super(value);
   }

@@ -1,7 +1,7 @@
 import { FibonacciIntegerEncoder } from "../../encoder/FibonacciIntegerEncoder";
-import { AbstractEncodableDataType } from "./AbstractEncodableDataType";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
 
-export class EncodableFibonacciInteger extends AbstractEncodableDataType<number> {
+export class EncodableFibonacciInteger extends AbstractEncodableBitStringDataType<number> {
   constructor(value?: number) {
     super(value);
   }
