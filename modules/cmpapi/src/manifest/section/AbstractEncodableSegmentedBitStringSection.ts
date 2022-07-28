@@ -1,5 +1,6 @@
-import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType";
-import { EncodableSection } from "./EncodableSection";
+import { GVL } from "../../gvl/GVL.js";
+import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType.js";
+import { EncodableSection } from "./EncodableSection.js";
 
 export abstract class AbstractEncodableSegmentedBitStringSection implements EncodableSection {
   protected fields: Map<string, AbstractEncodableBitStringDataType<any>>;
@@ -15,20 +16,12 @@ export abstract class AbstractEncodableSegmentedBitStringSection implements Enco
     return this.fields.has(fieldName);
   }
 
-  public getField(fieldName: string): AbstractEncodableBitStringDataType<any> {
-    if (this.fields.has(fieldName)) {
-      return this.fields.get(fieldName);
-    } else {
-      throw new Error("Field not found: '" + fieldName + "'");
-    }
-  }
-
   //Overriden
   public getFieldValue(fieldName: string): any {
     if (this.fields.has(fieldName)) {
       return this.fields.get(fieldName).getValue();
     } else {
-      throw new Error("Field not found: '" + fieldName + "'");
+      return null;
     }
   }
 
@@ -37,7 +30,7 @@ export abstract class AbstractEncodableSegmentedBitStringSection implements Enco
     if (this.fields.has(fieldName)) {
       this.fields.get(fieldName).setValue(value);
     } else {
-      throw new Error("Field not found: '" + fieldName + "'");
+      console.log(fieldName + " not found");
     }
   }
 
@@ -93,11 +86,7 @@ export abstract class AbstractEncodableSegmentedBitStringSection implements Enco
         if (this.fields.has(fieldName)) {
           let field = this.fields.get(fieldName);
           let value = field.getValue();
-          if (value) {
-            obj[fieldName] = value;
-          }
-        } else {
-          throw new Error("Field not found: '" + fieldName + "'");
+          obj[fieldName] = value;
         }
       }
     }
@@ -109,4 +98,16 @@ export abstract class AbstractEncodableSegmentedBitStringSection implements Enco
 
   //Overriden
   public abstract decode(encodedString: string): void;
+
+  //Overriden
+  public abstract getGvl(): GVL;
+
+  //Overriden
+  public abstract setGvl(gvl: GVL): void;
+
+  //Overriden
+  public abstract getId(): number;
+
+  //Overriden
+  public abstract getName(): string;
 }

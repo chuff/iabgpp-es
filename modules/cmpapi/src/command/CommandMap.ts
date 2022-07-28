@@ -1,20 +1,20 @@
-import { PingCommand } from "./PingCommand";
-import { GetFieldCommand } from "./GetFieldCommand";
-import { GetGppStringCommand } from "./GetGppStringCommand";
-import { GetSectionCommand } from "./GetSectionCommand";
-import { HasSectionCommand } from "./HasSectionCommand";
-import { GppCommand } from "./GppCommand";
-import { GetVendorListCommand } from "./GetVendorListCommand";
-import { AddEventListenerCommand } from "./AddEventListenerCommand";
-import { RemoveEventListenerCommand } from "./RemoveEventListenerCommand";
-import { GetGppDataCommand } from "./GetGppDataCommand";
+import { PingCommand } from "./PingCommand.js";
+import { GetFieldCommand } from "./GetFieldCommand.js";
+import { GetGppStringCommand } from "./GetGppStringCommand.js";
+import { GetSectionCommand } from "./GetSectionCommand.js";
+import { HasSectionCommand } from "./HasSectionCommand.js";
+import { GppCommand } from "./GppCommand.js";
+import { GetVendorListCommand } from "./GetVendorListCommand.js";
+import { AddEventListenerCommand } from "./AddEventListenerCommand.js";
+import { RemoveEventListenerCommand } from "./RemoveEventListenerCommand.js";
+import { GetTcDataCommand } from "./GetTcDataCommand.js";
 
 export class CommandMap {
   public static [GppCommand.ADD_EVENT_LISTENER]: typeof AddEventListenerCommand = AddEventListenerCommand;
   public static [GppCommand.GET_FIELD]: typeof GetFieldCommand = GetFieldCommand;
-  public static [GppCommand.GET_GPP_DATA]: typeof GetGppDataCommand = GetGppDataCommand;
   public static [GppCommand.GET_GPP_STRING]: typeof GetGppStringCommand = GetGppStringCommand;
   public static [GppCommand.GET_SECTION]: typeof GetSectionCommand = GetSectionCommand;
+  public static [GppCommand.GET_TC_DATA]: typeof GetTcDataCommand = GetTcDataCommand;
   public static [GppCommand.GET_VENDOR_LIST]: typeof GetVendorListCommand = GetVendorListCommand;
   public static [GppCommand.HAS_SECTION]: typeof HasSectionCommand = HasSectionCommand;
   public static [GppCommand.PING]: typeof PingCommand = PingCommand;

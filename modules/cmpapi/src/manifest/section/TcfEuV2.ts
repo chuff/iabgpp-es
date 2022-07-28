@@ -1,20 +1,25 @@
-import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType";
-import { EncodableBoolean } from "../datatype/EncodableBoolean";
-import { EncodableDatetime } from "../datatype/EncodableDatetime";
-import { EncodableFlexibleBitfield } from "../datatype/EncodableFlexibleBitfield";
-import { EncodableFixedBitfield } from "../datatype/EncodableFixedBitfield";
-import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger";
-import { EncodableFixedString } from "../datatype/EncodableFixedString";
-import { AbstractEncodableSegmentedBitStringSection } from "./AbstractEncodableSegmentedBitStringSection";
-import { EncodableFixedIntegerRange } from "../datatype/EncodableFixedIntegerRange";
-import { EncodableOptimizedFixedRange } from "../datatype/EncodableOptimizedFixedRange";
-import { DecodingError } from "../../error/DecodingError";
-import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder";
+import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType.js";
+import { EncodableBoolean } from "../datatype/EncodableBoolean.js";
+import { EncodableDatetime } from "../datatype/EncodableDatetime.js";
+import { EncodableFlexibleBitfield } from "../datatype/EncodableFlexibleBitfield.js";
+import { EncodableFixedBitfield } from "../datatype/EncodableFixedBitfield.js";
+import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger.js";
+import { EncodableFixedString } from "../datatype/EncodableFixedString.js";
+import { AbstractEncodableSegmentedBitStringSection } from "./AbstractEncodableSegmentedBitStringSection.js";
+import { EncodableFixedIntegerRange } from "../datatype/EncodableFixedIntegerRange.js";
+import { EncodableOptimizedFixedRange } from "../datatype/EncodableOptimizedFixedRange.js";
+import { DecodingError } from "../../error/DecodingError.js";
+import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder.js";
+import { GVL } from "../../gvl/GVL.js";
 
 export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
   public static readonly ID = 5;
   public static readonly VERSION = 2;
   public static readonly NAME = "tcfeuv2";
+  public static readonly GVL_URL = "";
+
+  private vendorListVersion = 0;
+  private gvl: GVL;
 
   constructor(encodedString?: string) {
     let fields = new Map<string, AbstractEncodableBitStringDataType<any>>();
@@ -117,18 +122,18 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
   public encode(): string {
     let segmentBitStrings = this.encodeSegmentsToBitStrings();
     let encodedSegments = [];
-    encodedSegments.push(segmentBitStrings[0]);
+    encodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[0]));
     if (this.getFieldValue("isServiceSpecific")) {
       if (segmentBitStrings[1] && segmentBitStrings[1].length > 0) {
-        encodedSegments.push(segmentBitStrings[1]);
+        encodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[1]));
       }
     } else {
       if (segmentBitStrings[2] && segmentBitStrings[2].length > 0) {
-        encodedSegments.push(segmentBitStrings[2]);
+        encodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[2]));
       }
 
       if (segmentBitStrings[3] && segmentBitStrings[3].length > 0) {
-        encodedSegments.push(segmentBitStrings[3]);
+        encodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[3]));
       }
     }
 
@@ -172,5 +177,37 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
       }
     }
     this.decodeSegmentsFromBitStrings(segmentBitStrings);
+  }
+
+  //Overriden
+  public setFieldValue(fieldName: string, value: any): void {
+    super.setFieldValue(fieldName, value);
+    if (fieldName != "created" && fieldName != "lastUpdated") {
+      const date = new Date();
+      const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+
+      this.setFieldValue("created", utcDate);
+      this.setFieldValue("lastUpdated", utcDate);
+    }
+  }
+
+  //Overriden
+  public getGvl(): GVL {
+    return this.gvl;
+  }
+
+  //Overriden
+  public setGvl(gvl: GVL): void {
+    this.gvl = gvl;
+  }
+
+  //Overriden
+  public getId(): number {
+    return TcfEuV2.ID;
+  }
+
+  //Overriden
+  public getName(): string {
+    return TcfEuV2.NAME;
   }
 }

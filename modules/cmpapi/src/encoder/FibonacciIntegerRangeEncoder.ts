@@ -1,7 +1,7 @@
-import { FibonacciIntegerEncoder } from "./FibonacciIntegerEncoder";
-import { BooleanEncoder } from "./BooleanEncoder";
-import { FixedIntegerEncoder } from "./FixedIntegerEncoder";
-import { DecodingError } from "../error/DecodingError";
+import { FibonacciIntegerEncoder } from "./FibonacciIntegerEncoder.js";
+import { BooleanEncoder } from "./BooleanEncoder.js";
+import { FixedIntegerEncoder } from "./FixedIntegerEncoder.js";
+import { DecodingError } from "../error/DecodingError.js";
 
 export class FibonacciIntegerRangeEncoder {
   public static encode(value: number[]): string {

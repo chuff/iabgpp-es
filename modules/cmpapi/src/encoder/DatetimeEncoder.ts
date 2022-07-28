@@ -1,5 +1,5 @@
-import { DecodingError } from "../error/DecodingError";
-import { FixedIntegerEncoder } from "./FixedIntegerEncoder";
+import { DecodingError } from "../error/DecodingError.js";
+import { FixedIntegerEncoder } from "./FixedIntegerEncoder.js";
 
 export class DatetimeEncoder {
   public static encode(value: Date): string {

@@ -1,4 +1,10 @@
+import { GVL } from "../../gvl/GVL.js";
+
 export interface EncodableSection {
+  getId(): number;
+
+  getName(): string;
+
   hasField(fieldName: string): boolean;
 
   getFieldValue(fieldName: string): any;
@@ -10,4 +16,8 @@ export interface EncodableSection {
   encode(): string;
 
   decode(encodedString: string): void;
+
+  getGvl(): GVL;
+
+  setGvl(gvl: GVL): void;
 }

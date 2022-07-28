@@ -1,5 +1,5 @@
-import { DatetimeEncoder } from "../../encoder/DatetimeEncoder";
-import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
+import { DatetimeEncoder } from "../../encoder/DatetimeEncoder.js";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType.js";
 
 export class EncodableDatetime extends AbstractEncodableBitStringDataType<Date> {
   constructor(value?: Date) {

@@ -1,6 +1,6 @@
-import { FixedIntegerEncoder } from "./FixedIntegerEncoder";
-import { DecodingError } from "../error/DecodingError";
-import { EncodingError } from "../error/EncodingError";
+import { FixedIntegerEncoder } from "./FixedIntegerEncoder.js";
+import { DecodingError } from "../error/DecodingError.js";
+import { EncodingError } from "../error/EncodingError.js";
 
 export class Base64UrlEncoder {
   /**

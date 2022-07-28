@@ -1,7 +1,8 @@
-import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder";
-import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType";
-import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger";
-import { AbstractEncodableBitStringSection } from "./AbstractEncodableBitStringSection";
+import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder.js";
+import { GVL } from "../../gvl/GVL.js";
+import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType.js";
+import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger.js";
+import { AbstractEncodableBitStringSection } from "./AbstractEncodableBitStringSection.js";
 
 export class UspV1 extends AbstractEncodableBitStringSection {
   public static readonly ID = 7;
@@ -35,5 +36,25 @@ export class UspV1 extends AbstractEncodableBitStringSection {
   public decode(encodedString: string): void {
     let bitString = Base64UrlEncoder.decode(encodedString);
     this.decodeFromBitString(bitString);
+  }
+
+  //Overriden
+  public getGvl(): GVL {
+    throw new Error("GVL is not supported for '" + UspV1.NAME + "'");
+  }
+
+  //Overriden
+  public setGvl(gvl: GVL): void {
+    throw new Error("GVL is not supported for '" + UspV1.NAME + "'");
+  }
+
+  //Overriden
+  public getId(): number {
+    return UspV1.ID;
+  }
+
+  //Overriden
+  public getName(): string {
+    return UspV1.NAME;
   }
 }

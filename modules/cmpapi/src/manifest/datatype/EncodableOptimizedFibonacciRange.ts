@@ -1,8 +1,8 @@
-import { FibonacciIntegerRangeEncoder } from "../../encoder/FibonacciIntegerRangeEncoder";
-import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder";
-import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
-import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
-import { EncodableFibonacciIntegerRange } from "./EncodableFibonacciIntegerRange";
+import { FibonacciIntegerRangeEncoder } from "../../encoder/FibonacciIntegerRangeEncoder.js";
+import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder.js";
+import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder.js";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType.js";
+import { EncodableFibonacciIntegerRange } from "./EncodableFibonacciIntegerRange.js";
 
 export class EncodableOptimizedFibonacciRange extends AbstractEncodableBitStringDataType<number[]> {
   constructor(value?: number[]) {

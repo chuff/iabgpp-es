@@ -1,4 +1,4 @@
-import { DecodingError } from "../error/DecodingError";
+import { DecodingError } from "../error/DecodingError.js";
 
 export class FixedIntegerEncoder {
   public static encode(value: number, bitStringLength: number): string {

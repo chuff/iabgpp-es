@@ -1,5 +1,5 @@
-import { DecodingError } from "../error/DecodingError";
-import { EncodingError } from "../error/EncodingError";
+import { DecodingError } from "../error/DecodingError.js";
+import { EncodingError } from "../error/EncodingError.js";
 
 export class BooleanEncoder {
   public static encode(value: boolean): string {

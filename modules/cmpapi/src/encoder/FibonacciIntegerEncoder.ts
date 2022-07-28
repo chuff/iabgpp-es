@@ -1,4 +1,4 @@
-import { DecodingError } from "../error/DecodingError";
+import { DecodingError } from "../error/DecodingError.js";
 
 export class FibonacciIntegerEncoder {
   public static encode(value: number): string {

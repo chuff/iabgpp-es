@@ -1,5 +1,5 @@
-import { FixedStringEncoder } from "../../encoder/FixedStringEncoder";
-import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
+import { FixedStringEncoder } from "../../encoder/FixedStringEncoder.js";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType.js";
 
 export class EncodableFixedString extends AbstractEncodableBitStringDataType<string> {
   private stringLength: number;

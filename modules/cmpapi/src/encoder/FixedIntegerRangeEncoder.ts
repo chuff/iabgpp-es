@@ -1,6 +1,6 @@
-import { DecodingError } from "../error/DecodingError";
-import { BooleanEncoder } from "./BooleanEncoder";
-import { FixedIntegerEncoder } from "./FixedIntegerEncoder";
+import { DecodingError } from "../error/DecodingError.js";
+import { BooleanEncoder } from "./BooleanEncoder.js";
+import { FixedIntegerEncoder } from "./FixedIntegerEncoder.js";
 
 export class FixedIntegerRangeEncoder {
   public static encode(value: number[]): string {

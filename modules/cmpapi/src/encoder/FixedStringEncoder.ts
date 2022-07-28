@@ -1,6 +1,6 @@
-import { DecodingError } from "../error/DecodingError";
-import { EncodingError } from "../error/EncodingError";
-import { FixedIntegerEncoder } from "./FixedIntegerEncoder";
+import { DecodingError } from "../error/DecodingError.js";
+import { EncodingError } from "../error/EncodingError.js";
+import { FixedIntegerEncoder } from "./FixedIntegerEncoder.js";
 
 export class FixedStringEncoder {
   public static encode(value: string, stringLength: number): string {

@@ -1,8 +1,9 @@
-import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder";
-import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType";
-import { EncodableFibonacciIntegerRange } from "../datatype/EncodableFibonacciIntegerRange";
-import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger";
-import { AbstractEncodableBitStringSection } from "./AbstractEncodableBitStringSection";
+import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder.js";
+import { GVL } from "../../gvl/GVL.js";
+import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType.js";
+import { EncodableFibonacciIntegerRange } from "../datatype/EncodableFibonacciIntegerRange.js";
+import { EncodableFixedInteger } from "../datatype/EncodableFixedInteger.js";
+import { AbstractEncodableBitStringSection } from "./AbstractEncodableBitStringSection.js";
 
 export class HeaderV1 extends AbstractEncodableBitStringSection {
   public static readonly ID = 3;
@@ -35,5 +36,25 @@ export class HeaderV1 extends AbstractEncodableBitStringSection {
   public decode(encodedString: string): void {
     let bitString = Base64UrlEncoder.decode(encodedString);
     this.decodeFromBitString(bitString);
+  }
+
+  //Overriden
+  public getGvl(): GVL {
+    throw new Error("GVL is not supported for '" + HeaderV1.NAME + "'");
+  }
+
+  //Overriden
+  public setGvl(gvl: GVL): void {
+    throw new Error("GVL is not supported for '" + HeaderV1.NAME + "'");
+  }
+
+  //Overriden
+  public getId(): number {
+    return HeaderV1.ID;
+  }
+
+  //Overriden
+  public getName(): string {
+    return HeaderV1.NAME;
   }
 }

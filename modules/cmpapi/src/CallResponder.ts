@@ -1,13 +1,13 @@
-import { CommandCallback } from "./command/CommandCallback";
-import { GppCommand } from "./command/GppCommand";
-import { CommandMap } from "./command/CommandMap";
-import { CmpApiModel } from "./CmpApiModel";
-import { CustomCommands } from "./CustomCommands";
-import { CmpStatus } from "./status/CmpStatus";
+import { CommandCallback } from "./command/CommandCallback.js";
+import { GppCommand } from "./command/GppCommand.js";
+import { CommandMap } from "./command/CommandMap.js";
+import { CmpApiContext } from "./CmpApiContext.js";
+import { CustomCommands } from "./CustomCommands.js";
+import { CmpStatus } from "./status/CmpStatus.js";
 
 export const API_KEY = "__gpp";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type APIArgs = [string, number, CommandCallback, ...any[]];
+export type APIArgs = [string, CommandCallback?, any?, number?];
 
 type GetQueueFunction = () => APIArgs[];
 // eslint-disable-next-line no-unused-vars
@@ -16,8 +16,34 @@ type PageCallHandler = (...APIArgs) => void;
 export class CallResponder {
   private callQueue: APIArgs[];
   private readonly customCommands: CustomCommands;
+  private cmpApiContext: CmpApiContext;
 
-  public constructor(customCommands?: CustomCommands) {
+  public constructor(cmpApiContext: CmpApiContext, customCommands?: CustomCommands) {
+    this.cmpApiContext = cmpApiContext;
+
+    if (customCommands) {
+      /**
+       * The addEventListener command and removeEventListener are the only ones
+       * that shouldn't be overwritten. The addEventListener command utilizes
+       * getTCData command, so overridding the TCData response should happen
+       * there.
+       */
+
+      let command = GppCommand.ADD_EVENT_LISTENER;
+
+      if (customCommands?.[command]) {
+        throw new Error(`Built-In Custom Commmand for ${command} not allowed`);
+      }
+
+      command = GppCommand.REMOVE_EVENT_LISTENER;
+
+      if (customCommands?.[command]) {
+        throw new Error(`Built-In Custom Commmand for ${command} not allowed`);
+      }
+
+      this.customCommands = customCommands;
+    }
+
     /**
      * Attempt to grab the queue – we could call ping and see if it is the stub,
      * but instead we'll just a feature-detection method of just trying to get
@@ -41,18 +67,20 @@ export class CallResponder {
   /**
    * Handler for all page call commands
    * @param {string} command
-   * @param {number} version
    * @param {CommandCallback} callback
-   * @param {any} params
+   * @param {any} param
+   * @param {number} version
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public apiCall(command: string, version: number, callback: CommandCallback, ...params: any): void | never {
+  public apiCall(command: string, callback?: CommandCallback, param?: any, version?: number): any {
     if (typeof command !== "string") {
-      callback(null, false);
-    } else if (typeof callback !== "function") {
+      return callback(null, false);
+    } else if (callback && typeof callback !== "function") {
       throw new Error("invalid callback function");
-    } else if (CmpApiModel.disabled) {
-      callback({ cmpStatus: CmpStatus.ERROR }, false);
+    } else if (this.cmpApiContext.disabled) {
+      if (callback) {
+        return callback({ cmpStatus: CmpStatus.ERROR }, false);
+      }
     } else if (!this.isCustomCommand(command) && !this.isBuiltInCommand(command)) {
       /**
        * This check is here just because the call shouldn't be queued if it's
@@ -61,18 +89,24 @@ export class CallResponder {
        * instead of letting it linger.
        */
 
-      callback(null, false);
+      if (callback) {
+        return callback(null, false);
+      }
     } else if (this.isCustomCommand(command) && !this.isBuiltInCommand(command)) {
-      this.customCommands[command](callback, ...params);
+      return this.customCommands[command](callback, param);
     } else if (command === GppCommand.PING) {
-      /**
-       * if it's a ping we always respond right away regardless of our tcModel
-       * status or other things.
-       */
+      //respond right away
+
       if (this.isCustomCommand(command)) {
-        new CommandMap[command](this.customCommands[command], params[0], null, callback);
+        return new CommandMap[command](
+          this.cmpApiContext,
+          this.customCommands[command],
+          callback,
+          null,
+          param
+        ).execute();
       } else {
-        new CommandMap[command](callback, params[0]);
+        return new CommandMap[command](this.cmpApiContext, callback, param).execute();
       }
 
       /**
@@ -81,20 +115,20 @@ export class CallResponder {
        * 2. null - gdpr does not apply
        * 3. Valid GppModel - gdpr applies and update was called
        */
-    } else if (CmpApiModel.gppModel === undefined) {
+    } else if (this.cmpApiContext.gppModel === undefined) {
       /**
        * If we are still waiting for the TC data to be set we can push this
        * onto the queue that we have and once the model is set it'll be called
        */
-      this.callQueue.push([command, version, callback, ...params]);
+      this.callQueue.push([command, callback, param, version]);
     } else if (this.isCustomCommand(command) && this.isBuiltInCommand(command)) {
-      new CommandMap[command](this.customCommands[command], params[0], null, callback);
+      return new CommandMap[command](this.customCommands[command], callback, param, null);
     } else {
       /**
        * at this point we know the command exists and we are free to call it
        */
 
-      new CommandMap[command](callback, params[0]);
+      return new CommandMap[command](this.cmpApiContext, callback, param).execute();
     }
   }
 

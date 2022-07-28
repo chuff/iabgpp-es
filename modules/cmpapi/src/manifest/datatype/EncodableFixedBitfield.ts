@@ -1,5 +1,5 @@
-import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder";
-import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
+import { FixedBitfieldEncoder } from "../../encoder/FixedBitfieldEncoder.js";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType.js";
 
 export class EncodableFixedBitfield extends AbstractEncodableBitStringDataType<number[]> {
   private bitStringLength: number;

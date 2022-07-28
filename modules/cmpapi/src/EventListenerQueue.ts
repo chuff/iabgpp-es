@@ -1,8 +1,9 @@
-import { CommandCallback } from "./command/CommandCallback";
-import { GetGppDataCommand } from "./command/GetGppDataCommand";
+import { CmpApiContext } from "./CmpApiContext.js";
+import { CommandCallback } from "./command/CommandCallback.js";
+import { GetSectionCommand } from "./command/GetSectionCommand.js";
 
 interface EventItem {
-  callback: CommandCallback;
+  callback?: CommandCallback;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   param?: any;
   next?: CommandCallback;
@@ -11,10 +12,19 @@ interface EventItem {
 export class EventListenerQueue {
   private eventQueue = new Map<number, EventItem>();
   private queueNumber = 0;
+  private cmpApiContext: CmpApiContext;
+
+  constructor(cmpApiContext: CmpApiContext) {
+    this.cmpApiContext = cmpApiContext;
+  }
 
   public add(eventItems: EventItem): number {
     this.eventQueue.set(this.queueNumber, eventItems);
     return this.queueNumber++;
+  }
+
+  public get(listenerId: number): EventItem {
+    return this.eventQueue.get(listenerId);
   }
 
   public remove(listenerId: number): boolean {
@@ -23,7 +33,13 @@ export class EventListenerQueue {
 
   public exec(): void {
     this.eventQueue.forEach((eventItem: EventItem, listenerId: number): void => {
-      new GetGppDataCommand(eventItem.callback, eventItem.param, listenerId, eventItem.next);
+      new GetSectionCommand(
+        this.cmpApiContext,
+        eventItem.callback,
+        eventItem.param,
+        listenerId,
+        eventItem.next
+      ).execute();
     });
   }
 

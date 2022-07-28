@@ -1,6 +1,6 @@
-import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
-import { FixedIntegerRangeEncoder } from "../../encoder/FixedIntegerRangeEncoder";
-import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
+import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder.js";
+import { FixedIntegerRangeEncoder } from "../../encoder/FixedIntegerRangeEncoder.js";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType.js";
 
 export class EncodableFixedIntegerRange extends AbstractEncodableBitStringDataType<number[]> {
   constructor(value?: number[]) {

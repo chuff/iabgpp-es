@@ -1,6 +1,6 @@
-import { FibonacciIntegerRangeEncoder } from "../../encoder/FibonacciIntegerRangeEncoder";
-import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder";
-import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType";
+import { FibonacciIntegerRangeEncoder } from "../../encoder/FibonacciIntegerRangeEncoder.js";
+import { FixedIntegerEncoder } from "../../encoder/FixedIntegerEncoder.js";
+import { AbstractEncodableBitStringDataType } from "./AbstractEncodableBitStringDataType.js";
 
 export class EncodableFibonacciIntegerRange extends AbstractEncodableBitStringDataType<number[]> {
   constructor(value?: number[]) {

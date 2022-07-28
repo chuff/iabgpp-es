@@ -1,8 +1,7 @@
-import { EncodingError } from "../error/EncodingError";
-import { EncodableSection } from "./section/EncodableSection";
-import { HeaderV1 } from "./section/HeaderV1";
-import { TcfEuV2 } from "./section/TcfEuV2";
-import { UspV1 } from "./section/UspV1";
+import { EncodableSection } from "./section/EncodableSection.js";
+import { HeaderV1 } from "./section/HeaderV1.js";
+import { TcfEuV2 } from "./section/TcfEuV2.js";
+import { UspV1 } from "./section/UspV1.js";
 
 export class GppModel {
   private sections = new Map<string, EncodableSection>();
@@ -16,8 +15,41 @@ export class GppModel {
     }
   }
 
-  public setSection(sectionName: string, section: EncodableSection) {
-    this.sections.set(sectionName, section);
+  public setFieldValue(sectionName: string, fieldName: string, value: any) {
+    let section: EncodableSection = null;
+    if (!this.sections.has(sectionName)) {
+      if (sectionName == TcfEuV2.NAME) {
+        section = new TcfEuV2();
+        this.sections.set(TcfEuV2.NAME, section);
+      } else if (sectionName == UspV1.NAME) {
+        section = new UspV1();
+        this.sections.set(UspV1.NAME, section);
+      }
+    } else {
+      section = this.sections.get(sectionName);
+    }
+
+    if (section) {
+      section.setFieldValue(fieldName, value);
+    } else {
+      console.log(sectionName + " not found");
+    }
+  }
+
+  public getFieldValue(sectionName: string, fieldName: string) {
+    if (this.sections.has(sectionName)) {
+      return this.sections.get(sectionName).getFieldValue(fieldName);
+    } else {
+      return null;
+    }
+  }
+
+  public hasField(sectionName: string, fieldName: string) {
+    if (this.sections.has(sectionName)) {
+      return this.sections.get(sectionName).hasField(fieldName);
+    } else {
+      return false;
+    }
   }
 
   public hasSection(sectionName: string) {
@@ -25,33 +57,31 @@ export class GppModel {
   }
 
   public getSection(sectionName: string) {
-    return this.sections.get(sectionName);
+    if (this.sections.has(sectionName)) {
+      return this.sections.get(sectionName).toObject();
+    } else {
+      return null;
+    }
   }
 
   public encode() {
-    let unencodedSections = [];
+    let encodedSections = [];
+    let sectionIds = [];
     for (let i = 0; i < this.sectionOrder.length; i++) {
       let sectionName = this.sectionOrder[i];
       if (this.sections.has(sectionName)) {
-        unencodedSections.push(this.sections.get(sectionName));
+        let section = this.sections.get(sectionName);
+        encodedSections.push(section.encode());
+        sectionIds.push(section.getId());
       }
     }
 
-    let sectionIds = [];
-    for (let i = 0; i < unencodedSections.length; i++) {
-      sectionIds.push(unencodedSections[i].getId());
-    }
-
     let header = new HeaderV1();
-    header.setFieldValue("sectionids", sectionIds);
-    unencodedSections.unshift(header);
+    header.setFieldValue("sectionIds", sectionIds);
+    encodedSections.unshift(header.encode());
 
-    let encodedSections = [];
-    for (let i = 0; i < unencodedSections.length; i++) {
-      let section = unencodedSections[i];
-      section.encode();
-    }
-    return encodedSections.join("~");
+    let encodedString = encodedSections.join("~");
+    return encodedString;
   }
 
   public decode(str: string) {
@@ -70,6 +100,35 @@ export class GppModel {
         let section = new UspV1(encodedSections[i + 1]);
         this.sections.set(UspV1.NAME, section);
       }
+    }
+  }
+
+  public encodeSection(sectionName: string): string {
+    if (this.sections.has(sectionName)) {
+      return this.sections.get(sectionName).encode();
+    } else {
+      return null;
+    }
+  }
+
+  public decodeSection(sectionName: string, encodedString: string): void {
+    let section: EncodableSection = null;
+    if (!this.sections.has(sectionName)) {
+      if (sectionName == TcfEuV2.NAME) {
+        section = new TcfEuV2();
+        this.sections.set(TcfEuV2.NAME, section);
+      } else if (sectionName == UspV1.NAME) {
+        section = new UspV1();
+        this.sections.set(UspV1.NAME, section);
+      }
+    } else {
+      section = this.sections.get(sectionName);
+    }
+
+    if (section) {
+      section.decode(encodedString);
+    } else {
+      console.log(sectionName + " not found");
     }
   }
 
