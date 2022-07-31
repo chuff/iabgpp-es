@@ -1,23 +1,19 @@
 /**
- * class for General GVL Errors
+ * class for General Gvl Errors
  *
  * @extends {Error}
  */
-class GVLError extends Error {
-
+class GvlError extends Error {
   /**
-   * constructor - constructs a GVLError
+   * constructor - constructs a GvlError
    *
    * @param {string} msg - Error message to display
    * @return {undefined}
    */
   public constructor(msg: string) {
-
     super(msg);
-    this.name = 'GVLError';
-
+    this.name = "GvlError";
   }
-
 }
 
-export {GVLError};
+export { GvlError };

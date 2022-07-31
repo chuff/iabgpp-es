@@ -9,3 +9,4 @@ export * from "./CmpApi.js";
 export * from "./CmpApiContext.js";
 export * from "./CustomCommands.js";
 export * from "./EventListenerQueue.js";
+export * from "./Gvl.js";

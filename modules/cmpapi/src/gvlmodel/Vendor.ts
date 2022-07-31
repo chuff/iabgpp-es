@@ -1,6 +1,6 @@
-import { GVLMapItem } from "./GVLMapItem.js";
+import { GvlMapItem } from "./GvlMapItem.js";
 
-export interface Vendor extends GVLMapItem {
+export interface Vendor extends GvlMapItem {
   purposes: number[];
   legIntPurposes: number[];
   flexiblePurposes: number[];

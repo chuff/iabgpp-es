@@ -6,7 +6,6 @@ export * from "./GetFieldCommand.js";
 export * from "./GetGppDataCommand.js";
 export * from "./GetGppStringCommand.js";
 export * from "./GetSectionCommand.js";
-export * from "./GetVendorListCommand.js";
 export * from "./GppCommand.js";
 export * from "./HasCommandSection.js";
 export * from "./PingCommand.js";

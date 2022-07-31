@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as sinon from "sinon";
-import { JsonHttpClient } from "../../../src/gvl/client/JsonHttpClient";
-import { XMLHttpTestTools } from "../../util/XMLHttpTestTools";
+import { JsonHttpClient } from "../../src/client/JsonHttpClient";
+import { XMLHttpTestTools } from "../util/XMLHttpTestTools";
 
 describe("Json->fetch", (): void => {
   const responseObj: object = {

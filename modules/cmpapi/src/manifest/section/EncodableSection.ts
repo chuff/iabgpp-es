@@ -1,4 +1,4 @@
-import { GVL } from "../../gvl/GVL.js";
+import { Gvl } from "../../Gvl.js";
 
 export interface EncodableSection {
   getId(): number;
@@ -16,8 +16,4 @@ export interface EncodableSection {
   encode(): string;
 
   decode(encodedString: string): void;
-
-  getGvl(): GVL;
-
-  setGvl(gvl: GVL): void;
 }

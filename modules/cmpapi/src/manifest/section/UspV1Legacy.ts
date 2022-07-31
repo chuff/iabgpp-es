@@ -1,4 +1,4 @@
-import { GVL } from "../../gvl/GVL.js";
+import { Gvl } from "../../Gvl.js";
 import { EncodableSection } from "./EncodableSection.js";
 
 export class UspV1Legacy implements EncodableSection {
@@ -71,16 +71,6 @@ export class UspV1Legacy implements EncodableSection {
     this.setFieldValue("notice", encodedString.charAt(1));
     this.setFieldValue("optOutSale", encodedString.charAt(2));
     this.setFieldValue("lspaCovered", encodedString.charAt(3));
-  }
-
-  //Overriden
-  public getGvl(): GVL {
-    throw new Error("GVL is not supported for '" + UspV1Legacy.NAME + "'");
-  }
-
-  //Overriden
-  public setGvl(gvl: GVL): void {
-    throw new Error("GVL is not supported for '" + UspV1Legacy.NAME + "'");
   }
 
   //Overriden

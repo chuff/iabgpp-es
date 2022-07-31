@@ -1,4 +1,4 @@
-import { GVL } from "../../gvl/GVL.js";
+import { Gvl } from "../../Gvl.js";
 import { AbstractEncodableBitStringDataType } from "../datatype/AbstractEncodableBitStringDataType.js";
 import { EncodableSection } from "./EncodableSection.js";
 
@@ -98,12 +98,6 @@ export abstract class AbstractEncodableSegmentedBitStringSection implements Enco
 
   //Overriden
   public abstract decode(encodedString: string): void;
-
-  //Overriden
-  public abstract getGvl(): GVL;
-
-  //Overriden
-  public abstract setGvl(gvl: GVL): void;
 
   //Overriden
   public abstract getId(): number;

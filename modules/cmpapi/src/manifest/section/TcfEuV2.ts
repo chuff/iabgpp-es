@@ -10,16 +10,11 @@ import { EncodableFixedIntegerRange } from "../datatype/EncodableFixedIntegerRan
 import { EncodableOptimizedFixedRange } from "../datatype/EncodableOptimizedFixedRange.js";
 import { DecodingError } from "../../error/DecodingError.js";
 import { Base64UrlEncoder } from "../../encoder/Base64UrlEncoder.js";
-import { GVL } from "../../gvl/GVL.js";
 
 export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
   public static readonly ID = 5;
   public static readonly VERSION = 2;
   public static readonly NAME = "tcfeuv2";
-  public static readonly GVL_URL = "";
-
-  private vendorListVersion = 0;
-  private gvl: GVL;
 
   constructor(encodedString?: string) {
     let fields = new Map<string, AbstractEncodableBitStringDataType<any>>();
@@ -189,16 +184,6 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
       this.setFieldValue("created", utcDate);
       this.setFieldValue("lastUpdated", utcDate);
     }
-  }
-
-  //Overriden
-  public getGvl(): GVL {
-    return this.gvl;
-  }
-
-  //Overriden
-  public setGvl(gvl: GVL): void {
-    this.gvl = gvl;
   }
 
   //Overriden
