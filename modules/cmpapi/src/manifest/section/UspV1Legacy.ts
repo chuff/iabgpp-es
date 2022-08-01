@@ -1,6 +1,7 @@
 import { Gvl } from "../../Gvl.js";
 import { EncodableSection } from "./EncodableSection.js";
 
+// Deprecated
 export class UspV1Legacy implements EncodableSection {
   public static readonly ID = 6;
   public static readonly VERSION = 1;

@@ -1,6 +1,7 @@
 import { EncodableSection } from "../manifest/section/EncodableSection.js";
 import { Command } from "./Command.js";
 
+// Deprcated
 export class GetTcDataCommand extends Command {
   protected respond(): any {
     let response = null;

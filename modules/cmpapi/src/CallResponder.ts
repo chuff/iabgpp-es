@@ -77,10 +77,6 @@ export class CallResponder {
       return callback(null, false);
     } else if (callback && typeof callback !== "function") {
       throw new Error("invalid callback function");
-    } else if (this.cmpApiContext.disabled) {
-      if (callback) {
-        return callback({ cmpStatus: CmpStatus.ERROR }, false);
-      }
     } else if (!this.isCustomCommand(command) && !this.isBuiltInCommand(command)) {
       /**
        * This check is here just because the call shouldn't be queued if it's

@@ -7,11 +7,11 @@ export class GppModel {
   private sections = new Map<string, EncodableSection>();
   private sectionOrder: string[];
 
-  constructor(base64EncodedString?: string) {
+  constructor(encodedString?: string) {
     this.sectionOrder = [TcfEuV2.NAME, UspV1.NAME];
 
-    if (base64EncodedString && base64EncodedString.length > 0) {
-      this.decode(base64EncodedString);
+    if (encodedString && encodedString.length > 0) {
+      this.decode(encodedString);
     }
   }
 

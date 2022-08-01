@@ -17,7 +17,6 @@ export class CmpApiContext {
 
   public readonly eventQueue = new EventListenerQueue(this);
   public cmpStatus: CmpStatus = CmpStatus.LOADING;
-  public disabled = false;
   public cmpDisplayStatus: DisplayStatus = DisplayStatus.HIDDEN;
   public gppModel: GppModel = new GppModel();
 
@@ -34,7 +33,6 @@ export class CmpApiContext {
 
     this.gppModel = new GppModel();
     this.cmpStatus = CmpStatus.LOADING;
-    this.disabled = false;
     this.cmpDisplayStatus = DisplayStatus.HIDDEN;
     this.eventQueue.clear();
   }
