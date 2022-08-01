@@ -12,11 +12,11 @@ export class HeaderV1 extends AbstractEncodableBitStringSection {
 
   constructor(encodedString?: string) {
     let fields = new Map<string, AbstractEncodableBitStringDataType<any>>();
-    fields.set("id", new EncodableFixedInteger(6, HeaderV1.ID));
-    fields.set("version", new EncodableFixedInteger(6, HeaderV1.VERSION));
-    fields.set("sectionIds", new EncodableFibonacciIntegerRange([]));
+    fields.set("Id", new EncodableFixedInteger(6, HeaderV1.ID));
+    fields.set("Version", new EncodableFixedInteger(6, HeaderV1.VERSION));
+    fields.set("SectionIds", new EncodableFibonacciIntegerRange([]));
 
-    let fieldOrder = ["id", "version", "sectionIds"];
+    let fieldOrder = ["Id", "Version", "SectionIds"];
 
     super(fields, fieldOrder);
 

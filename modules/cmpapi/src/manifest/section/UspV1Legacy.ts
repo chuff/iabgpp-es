@@ -11,10 +11,10 @@ export class UspV1Legacy implements EncodableSection {
 
   constructor(encodedString?: string) {
     this.fields = new Map<String, any>();
-    this.fields.set("version", UspV1Legacy.VERSION);
-    this.fields.set("notice", "-");
-    this.fields.set("optOutSale", "-");
-    this.fields.set("lspaCovered", "-");
+    this.fields.set("Version", UspV1Legacy.VERSION);
+    this.fields.set("Notice", "-");
+    this.fields.set("OptOutSale", "-");
+    this.fields.set("LspaCovered", "-");
 
     if (encodedString && encodedString.length > 0) {
       this.decode(encodedString);
@@ -58,20 +58,20 @@ export class UspV1Legacy implements EncodableSection {
   //Overriden
   public encode() {
     let str = "";
-    str += this.getFieldValue("version");
-    str += this.getFieldValue("notice");
-    str += this.getFieldValue("optOutSale");
-    str += this.getFieldValue("lspaCovered");
+    str += this.getFieldValue("Version");
+    str += this.getFieldValue("Notice");
+    str += this.getFieldValue("OptOutSale");
+    str += this.getFieldValue("LspaCovered");
     return str;
   }
 
   //Overriden
   public decode(encodedString: string) {
     //TODO: validate
-    this.setFieldValue("version", parseInt(encodedString.charAt(0)));
-    this.setFieldValue("notice", encodedString.charAt(1));
-    this.setFieldValue("optOutSale", encodedString.charAt(2));
-    this.setFieldValue("lspaCovered", encodedString.charAt(3));
+    this.setFieldValue("Version", parseInt(encodedString.charAt(0)));
+    this.setFieldValue("Notice", encodedString.charAt(1));
+    this.setFieldValue("OptOutSale", encodedString.charAt(2));
+    this.setFieldValue("LspaCovered", encodedString.charAt(3));
   }
 
   //Overriden

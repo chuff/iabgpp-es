@@ -20,89 +20,89 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
     let fields = new Map<string, AbstractEncodableBitStringDataType<any>>();
 
     // core section
-    fields.set("version", new EncodableFixedInteger(6, TcfEuV2.VERSION));
-    fields.set("created", new EncodableDatetime());
-    fields.set("lastUpdated", new EncodableDatetime());
-    fields.set("cmpId", new EncodableFixedInteger(12, 0));
-    fields.set("cmpVersion", new EncodableFixedInteger(12, 0));
-    fields.set("consentScreen", new EncodableFixedInteger(6, 0));
-    fields.set("consentLanguage", new EncodableFixedString(2, "EN"));
-    fields.set("vendorListVersion", new EncodableFixedInteger(12, 0));
-    fields.set("policyVersion", new EncodableFixedInteger(6, 2));
-    fields.set("isServiceSpecific", new EncodableBoolean(false));
-    fields.set("useNonStandardStacks", new EncodableBoolean(false));
-    fields.set("specialFeatureOptins", new EncodableFixedBitfield(12, []));
-    fields.set("purposeConsents", new EncodableFixedBitfield(24, []));
-    fields.set("purposeLegitimateInterests", new EncodableFixedBitfield(24, []));
-    fields.set("purposeOneTreatment", new EncodableBoolean(false));
-    fields.set("publisherCountryCode", new EncodableFixedString(2, "AA"));
-    fields.set("vendorConsents", new EncodableFixedIntegerRange([]));
-    fields.set("vendorLegitimateInterests", new EncodableFixedIntegerRange([]));
+    fields.set("Version", new EncodableFixedInteger(6, TcfEuV2.VERSION));
+    fields.set("Created", new EncodableDatetime());
+    fields.set("LastUpdated", new EncodableDatetime());
+    fields.set("CmpId", new EncodableFixedInteger(12, 0));
+    fields.set("CmpVersion", new EncodableFixedInteger(12, 0));
+    fields.set("ConsentScreen", new EncodableFixedInteger(6, 0));
+    fields.set("ConsentLanguage", new EncodableFixedString(2, "EN"));
+    fields.set("VendorListVersion", new EncodableFixedInteger(12, 0));
+    fields.set("PolicyVersion", new EncodableFixedInteger(6, 2));
+    fields.set("IsServiceSpecific", new EncodableBoolean(false));
+    fields.set("UseNonStandardStacks", new EncodableBoolean(false));
+    fields.set("SpecialFeatureOptins", new EncodableFixedBitfield(12, []));
+    fields.set("PurposeConsents", new EncodableFixedBitfield(24, []));
+    fields.set("PurposeLegitimateInterests", new EncodableFixedBitfield(24, []));
+    fields.set("PurposeOneTreatment", new EncodableBoolean(false));
+    fields.set("PublisherCountryCode", new EncodableFixedString(2, "AA"));
+    fields.set("VendorConsents", new EncodableFixedIntegerRange([]));
+    fields.set("VendorLegitimateInterests", new EncodableFixedIntegerRange([]));
 
-    fields.set("publisherRestrictions", new EncodableFixedIntegerRange([]));
+    fields.set("PublisherRestrictions", new EncodableFixedIntegerRange([]));
 
     // publisher purposes segment
-    fields.set("publisherPurposesSegmentType", new EncodableFixedInteger(3, 3));
-    fields.set("publisherConsents", new EncodableFixedBitfield(24, []));
-    fields.set("publisherLegitimateInterests", new EncodableFixedBitfield(24, []));
+    fields.set("PublisherPurposesSegmentType", new EncodableFixedInteger(3, 3));
+    fields.set("PublisherConsents", new EncodableFixedBitfield(24, []));
+    fields.set("PublisherLegitimateInterests", new EncodableFixedBitfield(24, []));
 
     let numCustomPurposes = new EncodableFixedInteger(6, 0);
-    fields.set("numCustomPurposes", numCustomPurposes);
+    fields.set("NumCustomPurposes", numCustomPurposes);
 
     fields.set(
-      "publisherCustomConsents",
+      "PublisherCustomConsents",
       new EncodableFlexibleBitfield(() => {
         return numCustomPurposes.getValue();
       }, [])
     );
 
     fields.set(
-      "publisherCustomLegitimateInterests",
+      "PublisherCustomLegitimateInterests",
       new EncodableFlexibleBitfield(() => {
         return numCustomPurposes.getValue();
       }, [])
     );
 
-    fields.set("vendorsAllowedSegmentType", new EncodableFixedInteger(3, 2));
-    fields.set("vendorsAllowed", new EncodableOptimizedFixedRange([]));
+    fields.set("VendorsAllowedSegmentType", new EncodableFixedInteger(3, 2));
+    fields.set("VendorsAllowed", new EncodableOptimizedFixedRange([]));
 
-    fields.set("vendorsDisclosedSegmentType", new EncodableFixedInteger(3, 1));
-    fields.set("vendorsDisclosed", new EncodableOptimizedFixedRange([]));
+    fields.set("VendorsDisclosedSegmentType", new EncodableFixedInteger(3, 1));
+    fields.set("VendorsDisclosed", new EncodableOptimizedFixedRange([]));
 
     let coreSegment = [
-      "version",
-      "created",
-      "lastUpdated",
-      "cmpId",
-      "cmpVersion",
-      "consentScreen",
-      "consentLanguage",
-      "vendorListVersion",
-      "policyVersion",
-      "isServiceSpecific",
-      "useNonStandardStacks",
-      "specialFeatureOptins",
-      "purposeConsents",
-      "purposeLegitimateInterests",
-      "purposeOneTreatment",
-      "publisherCountryCode",
-      "vendorConsents",
-      "vendorLegitimateInterests",
-      "publisherRestrictions",
+      "Version",
+      "Created",
+      "LastUpdated",
+      "CmpId",
+      "CmpVersion",
+      "ConsentScreen",
+      "ConsentLanguage",
+      "VendorListVersion",
+      "PolicyVersion",
+      "IsServiceSpecific",
+      "UseNonStandardStacks",
+      "SpecialFeatureOptins",
+      "PurposeConsents",
+      "PurposeLegitimateInterests",
+      "PurposeOneTreatment",
+      "PublisherCountryCode",
+      "VendorConsents",
+      "VendorLegitimateInterests",
+      "PublisherRestrictions",
     ];
 
     let publisherPurposesSegment = [
-      "publisherPurposesSegmentType",
-      "publisherConsents",
-      "publisherLegitimateInterests",
-      "numCustomPurposes",
-      "publisherCustomConsents",
-      "publisherCustomLegitimateInterests",
+      "PublisherPurposesSegmentType",
+      "PublisherConsents",
+      "PublisherLegitimateInterests",
+      "NumCustomPurposes",
+      "PublisherCustomConsents",
+      "PublisherCustomLegitimateInterests",
     ];
 
-    let vendorsAllowedSegment = ["vendorsAllowedSegmentType", "vendorsAllowed"];
+    let vendorsAllowedSegment = ["VendorsAllowedSegmentType", "VendorsAllowed"];
 
-    let vendorsDisclosedSegment = ["vendorsDisclosedSegmentType", "vendorsDisclosed"];
+    let vendorsDisclosedSegment = ["VendorsDisclosedSegmentType", "VendorsDisclosed"];
 
     let segments = [coreSegment, publisherPurposesSegment, vendorsAllowedSegment, vendorsDisclosedSegment];
 
@@ -118,7 +118,7 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
     let segmentBitStrings = this.encodeSegmentsToBitStrings();
     let encodedSegments = [];
     encodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[0]));
-    if (this.getFieldValue("isServiceSpecific")) {
+    if (this.getFieldValue("IsServiceSpecific")) {
       if (segmentBitStrings[1] && segmentBitStrings[1].length > 0) {
         encodedSegments.push(Base64UrlEncoder.encode(segmentBitStrings[1]));
       }
@@ -177,12 +177,12 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
   //Overriden
   public setFieldValue(fieldName: string, value: any): void {
     super.setFieldValue(fieldName, value);
-    if (fieldName !== "created" && fieldName !== "lastUpdated") {
+    if (fieldName !== "Created" && fieldName !== "LastUpdated") {
       const date = new Date();
       const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 
-      this.setFieldValue("created", utcDate);
-      this.setFieldValue("lastUpdated", utcDate);
+      this.setFieldValue("Created", utcDate);
+      this.setFieldValue("LastUpdated", utcDate);
     }
   }
 

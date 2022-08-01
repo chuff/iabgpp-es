@@ -7,22 +7,22 @@ describe("manifest.section.TcfEuV2", (): void => {
       "CPcqBNJPcqBNJNwAAAENAwCAAAAAAAAAAAAAAAAAAAAA.YAAAAAAAAAA.QGLtV_T9fb2vj-_Z99_tkeYwf95y3p-wzhheMs-8NyZeH_B4Wv2MyvBX4JiQKGRgksjLBAQdtHGlcTQgBwIlViTLMYk2MjzNKJrJEilsbO2dYGD9Pn8HT3ZCY70-vv__7v3ff_3g.IGLtV_T9fb2vj-_Z99_tkeYwf95y3p-wzhheMs-8NyZeH_B4Wv2MyvBX4JiQKGRgksjLBAQdtHGlcTQgBwIlViTLMYk2MjzNKJrJEilsbO2dYGD9Pn8HT3ZCY70-vv__7v3ff_3g"
     );
 
-    expect(tcfEuV2.getFieldValue("version")).to.eql(2);
-    expect(tcfEuV2.getFieldValue("cmpId")).to.eql(880);
-    expect(tcfEuV2.getFieldValue("cmpVersion")).to.eql(0);
-    expect(tcfEuV2.getFieldValue("consentScreen")).to.eql(0);
-    expect(tcfEuV2.getFieldValue("consentLanguage")).to.eql("EN");
-    expect(tcfEuV2.getFieldValue("vendorListVersion")).to.eql(48);
-    expect(tcfEuV2.getFieldValue("policyVersion")).to.eql(2);
-    expect(tcfEuV2.getFieldValue("isServiceSpecific")).to.eql(false);
-    expect(tcfEuV2.getFieldValue("useNonStandardStacks")).to.eql(false);
-    expect(tcfEuV2.getFieldValue("purposeOneTreatment")).to.eql(false);
-    expect(tcfEuV2.getFieldValue("publisherCountryCode")).to.eql("AA");
+    expect(tcfEuV2.getFieldValue("Version")).to.eql(2);
+    expect(tcfEuV2.getFieldValue("CmpId")).to.eql(880);
+    expect(tcfEuV2.getFieldValue("CmpVersion")).to.eql(0);
+    expect(tcfEuV2.getFieldValue("ConsentScreen")).to.eql(0);
+    expect(tcfEuV2.getFieldValue("ConsentLanguage")).to.eql("EN");
+    expect(tcfEuV2.getFieldValue("VendorListVersion")).to.eql(48);
+    expect(tcfEuV2.getFieldValue("PolicyVersion")).to.eql(2);
+    expect(tcfEuV2.getFieldValue("IsServiceSpecific")).to.eql(false);
+    expect(tcfEuV2.getFieldValue("UseNonStandardStacks")).to.eql(false);
+    expect(tcfEuV2.getFieldValue("PurposeOneTreatment")).to.eql(false);
+    expect(tcfEuV2.getFieldValue("PublisherCountryCode")).to.eql("AA");
 
-    expect(tcfEuV2.getFieldValue("publisherPurposesSegmentType")).to.eql(3);
+    expect(tcfEuV2.getFieldValue("PublisherPurposesSegmentType")).to.eql(3);
 
-    expect(tcfEuV2.getFieldValue("vendorsAllowedSegmentType")).to.eql(2);
-    let vendorsAllowed = tcfEuV2.getFieldValue("vendorsAllowed");
+    expect(tcfEuV2.getFieldValue("VendorsAllowedSegmentType")).to.eql(2);
+    let vendorsAllowed = tcfEuV2.getFieldValue("VendorsAllowed");
     expect(vendorsAllowed.length).to.eql(434);
     expect(vendorsAllowed[0]).to.eql(1);
     expect(vendorsAllowed[1]).to.eql(2);
@@ -44,8 +44,8 @@ describe("manifest.section.TcfEuV2", (): void => {
     expect(vendorsAllowed[vendorsAllowed.length - 2]).to.eql(790);
     expect(vendorsAllowed[vendorsAllowed.length - 1]).to.eql(791);
 
-    expect(tcfEuV2.getFieldValue("vendorsDisclosedSegmentType")).to.eql(1);
-    let vendorsDisclosed = tcfEuV2.getFieldValue("vendorsDisclosed");
+    expect(tcfEuV2.getFieldValue("VendorsDisclosedSegmentType")).to.eql(1);
+    let vendorsDisclosed = tcfEuV2.getFieldValue("VendorsDisclosed");
     expect(vendorsDisclosed.length).to.eql(434);
     expect(vendorsDisclosed[0]).to.eql(1);
     expect(vendorsDisclosed[1]).to.eql(2);

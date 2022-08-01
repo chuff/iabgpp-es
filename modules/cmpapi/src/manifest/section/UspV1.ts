@@ -11,12 +11,12 @@ export class UspV1 extends AbstractEncodableBitStringSection {
 
   constructor(encodedString?: string) {
     let fields = new Map<string, AbstractEncodableBitStringDataType<any>>();
-    fields.set("version", new EncodableFixedInteger(6, UspV1.VERSION));
-    fields.set("notice", new EncodableFixedInteger(2));
-    fields.set("optOutSale", new EncodableFixedInteger(2));
-    fields.set("lspaCovered", new EncodableFixedInteger(2));
+    fields.set("Version", new EncodableFixedInteger(6, UspV1.VERSION));
+    fields.set("Notice", new EncodableFixedInteger(2));
+    fields.set("OptOutSale", new EncodableFixedInteger(2));
+    fields.set("LspaCovered", new EncodableFixedInteger(2));
 
-    let fieldOrder = ["version", "notice", "optOutSale", "lspaCovered"];
+    let fieldOrder = ["Version", "Notice", "OptOutSale", "LspaCovered"];
 
     super(fields, fieldOrder);
 
