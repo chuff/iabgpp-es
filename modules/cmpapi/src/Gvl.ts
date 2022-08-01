@@ -14,23 +14,12 @@ import { VendorList } from "./gvlmodel/VendorList.js";
 type PurposeOrFeature = "purpose" | "feature";
 type PurposeSubType = "consent" | "legInt" | "flexible";
 
-/**
- * class with utilities for managing the global vendor list.  Will use JSON to
- * fetch the vendor list from specified url and will serialize it into this
- * object and provide accessors.  Provides ways to group vendors on the list by
- * purpose and feature.
- */
-export class Gvl implements VendorList {
-  public static readonly DEFAULT_LANGUAGE: string = "EN";
-
-  private languageCache: Map<string, Declarations> = new Map<string, VendorList>();
-  private cache: Map<number, Declarations> = new Map<number, Declarations>();
-  private latestCacheKey = 0;
-
-  /**
-   * Set of available consent languages published by the IAB
-   */
-  public readonly consentLanguages: ConsentLanguages = new ConsentLanguages();
+export class GvlUrlConfig {
+  private baseUrl: string;
+  private version: string | number;
+  private latestFilename = "vendor-list.json";
+  private versionedFilename = "archives/vendor-list-v[VERSION].json";
+  private languageFilename = "purposes-[LANG].json";
 
   /**
    * baseUrl - Entities using the vendor-list.json are required by the iab to
@@ -42,21 +31,56 @@ export class Gvl implements VendorList {
    * broken out from the filename because it follows a different scheme for
    * latest file vs versioned files.
    *
-   * @throws {GvlError} - If the url is http[s]://vendorlist.consensu.org/...
-   * this will throw an error.  IAB Europe requires that that CMPs and Vendors
-   * cache their own copies of the Gvl to minimize load on their
-   * infrastructure.  For more information regarding caching of the
-   * vendor-list.json, please see [the TCF documentation on 'Caching the Global
-   * Vendor List'
    * ](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20Consent%20string%20and%20vendor%20list%20formats%20v2.md#caching-the-global-vendor-list)
    */
-  public baseUrl: string;
+  public constructor(baseUrl: string) {
+    if (!baseUrl || baseUrl.length == 0) {
+      throw new GvlError("Invalid baseUrl: '" + baseUrl + "'");
+    }
+
+    if (/^https?:\/\/vendorlist\.consensu\.org\//.test(baseUrl)) {
+      throw new GvlError(
+        "Invalid baseUrl!  You may not pull directly from vendorlist.consensu.org and must provide your own cache"
+      );
+    }
+
+    // if a trailing slash was forgotten
+    if (baseUrl.length > 0 && baseUrl[baseUrl.length - 1] !== "/") {
+      baseUrl += "/";
+    }
+
+    this.baseUrl = baseUrl;
+  }
+
+  public getBaseUrl() {
+    return this.baseUrl;
+  }
 
   /**
    * @param {string} - the latest is assumed to be vendor-list.json because
    * that is what the iab uses, but it could be different... if you want
    */
-  public latestFilename = "vendor-list.json";
+  public withVersion(version: string | number): GvlUrlConfig {
+    this.version = version;
+    return this;
+  }
+
+  public getVersion() {
+    return this.version;
+  }
+
+  /**
+   * @param {string} - the latest is assumed to be vendor-list.json because
+   * that is what the iab uses, but it could be different... if you want
+   */
+  public withLatestFilename(latestFilename: string): GvlUrlConfig {
+    this.latestFilename = latestFilename;
+    return this;
+  }
+
+  public getLatestFilename() {
+    return this.latestFilename;
+  }
 
   /**
    * @param {string} - the versioned name is assumed to be
@@ -71,7 +95,14 @@ export class Gvl implements VendorList {
    * Gvl.versionedFilename = "vendorlist?getVersion=[VERSION]";
    * ```
    */
-  public versionedFilename = "archives/vendor-list-v[VERSION].json";
+  public withVersionedFilename(versionedFilename: string): GvlUrlConfig {
+    this.versionedFilename = versionedFilename;
+    return this;
+  }
+
+  public getVersionedFilename() {
+    return this.versionedFilename;
+  }
 
   /**
    * @param {string} - Translations of the names and descriptions for Purposes,
@@ -88,233 +119,111 @@ export class Gvl implements VendorList {
    * Gvl.languageFilename = "purposes?getPurposes=[LANG]";
    * ```
    */
-  public languageFilename = "purposes-[LANG].json";
+  public withLanguageFilename(languageFilename: string): GvlUrlConfig {
+    this.languageFilename = languageFilename;
+    return this;
+  }
 
-  /**
-   * @param {Promise} resolved when this Gvl object is populated with the data
-   * or rejected if there is an error.
-   */
-  public readyPromise: Promise<void | GvlError>;
+  public getLanguageFilename() {
+    return this.languageFilename;
+  }
+}
 
-  /**
-   * @param {number} gvlSpecificationVersion - schema version for the Gvl that is used
-   */
+/**
+ * class with utilities for managing the global vendor list.  Will use JSON to
+ * fetch the vendor list from specified url and will serialize it into this
+ * object and provide accessors.  Provides ways to group vendors on the list by
+ * purpose and feature.
+ */
+export class Gvl implements VendorList {
+  vendors: IntMap<Vendor>;
+  public static DEFAULT_LANGUAGE = "EN";
+
+  public readonly consentLanguages: ConsentLanguages = new ConsentLanguages();
   public gvlSpecificationVersion: number;
-
-  /**
-   * @param {number} incremented with each published file change
-   */
   public vendorListVersion: number;
-
-  /**
-   * @param {number} tcfPolicyVersion - The TCF MO will increment this value
-   * whenever a Gvl change (such as adding a new Purpose or Feature or a change
-   * in Purpose wording) legally invalidates existing TC Strings and requires
-   * CMPs to re-establish transparency and consent from users. If the policy
-   * version number in the latest Gvl is different from the value in your TC
-   * String, then you need to re-establish transparency and consent for that
-   * user. A version 1 format TC String is considered to have a version value
-   * of 1.
-   */
   public tcfPolicyVersion: number;
-
-  /**
-   * @param {string | Date} lastUpdated - the date in which the vendor list
-   * json file  was last updated.
-   */
   public lastUpdated: string | Date;
-
-  /**
-   * @param {IntMap<Purpose>} a collection of [[Purpose]]s
-   */
   public purposes: IntMap<Purpose>;
-
-  /**
-   * @param {IntMap<Purpose>} a collection of [[Purpose]]s
-   */
   public specialPurposes: IntMap<Purpose>;
-
-  /**
-   * @param {IntMap<Feature>} a collection of [[Feature]]s
-   */
   public features: IntMap<Feature>;
-
-  /**
-   * @param {IntMap<Feature>} a collection of [[Feature]]s
-   */
   public specialFeatures: IntMap<Feature>;
+  public stacks: IntMap<Stack>;
+  public language: string = Gvl.DEFAULT_LANGUAGE;
 
-  /**
-   * @param {boolean} internal reference of when the Gvl is ready to be used
-   */
-  private isReady_ = false;
-
-  /**
-   * @param {IntMap<Vendor>} a collection of [[Vendor]]s
-   */
-  private vendors_: IntMap<Vendor>;
-
-  public vendorIds: Set<number>;
-
-  /**
-   * @param {IntMap<Vendor>} a collection of [[Vendor]]. Used as a backup if a whitelist is sets
-   */
+  private vendorIds: Set<number>;
+  private baseUrl: string;
+  private languageFilename: string;
+  private ready = false;
   private fullVendorList: IntMap<Vendor>;
-
-  /**
-   * @param {ByPurposeVendorMap} vendors by purpose
-   */
   private byPurposeVendorMap: ByPurposeVendorMap;
-
-  /**
-   * @param {IdSetMap} vendors by special purpose
-   */
   private bySpecialPurposeVendorMap: IdSetMap;
-
-  /**
-   * @param {IdSetMap} vendors by feature
-   */
   private byFeatureVendorMap: IdSetMap;
-
-  /**
-   * @param {IdSetMap} vendors by special feature
-   */
   private bySpecialFeatureVendorMap: IdSetMap;
 
-  /**
-   * @param {IntMap<Stack>} a collection of [[Stack]]s
-   */
-  public stacks: IntMap<Stack>;
-
-  private lang_: string = Gvl.DEFAULT_LANGUAGE;
-
-  private isLatest = false;
-
-  /**
-   * @param {VersionOrVendorList} [versionOrVendorList] - can be either a
-   * [[VendorList]] object or a version number represented as a string or
-   * number to download.  If nothing is passed the latest version of the Gvl
-   * will be loaded
-   */
-  public constructor(baseUrl?: string) {
-    if (baseUrl) {
-      if (/^https?:\/\/vendorlist\.consensu\.org\//.test(baseUrl)) {
-        throw new GvlError(
-          "Invalid baseUrl!  You may not pull directly from vendorlist.consensu.org and must provide your own cache"
-        );
-      }
-
-      // if a trailing slash was forgotten
-      if (baseUrl.length > 0 && baseUrl[baseUrl.length - 1] !== "/") {
-        baseUrl += "/";
-      }
-
-      this.baseUrl = baseUrl;
-    }
+  public static fromVendorList(vendorList: VendorList): Gvl {
+    let gvl = new Gvl();
+    gvl.populate(vendorList as Declarations);
+    return gvl;
   }
 
-  public refreshVendorList(version?: number | string) {
-    if (!this.baseUrl) {
-      throw new GvlError("baseUrl is not set");
-    }
+  /**
+   * **
+   * @param {GvlConfig} - Configuration containing url configuration
+   *
+   * @throws {GvlError} - If the url is http[s]://vendorlist.consensu.org/...
+   * this will throw an error.  IAB Europe requires that that CMPs and Vendors
+   * cache their own copies of the Gvl to minimize load on their
+   * infrastructure.  For more information regarding caching of the
+   * vendor-list.json, please see [the TCF documentation on 'Caching the Global
+   * Vendor List'
+   */
+  public static async fromUrl(config: GvlUrlConfig): Promise<Gvl> {
+    let baseUrl = config.getBaseUrl();
 
-    if (/^https?:\/\/vendorlist\.consensu\.org\//.test(this.baseUrl)) {
-      ("Invalid baseUrl!  You may not pull directly from vendorlist.consensu.org and must provide your own cache");
-    }
+    let gvl = new Gvl();
+    gvl.baseUrl = baseUrl;
+    gvl.languageFilename = config.getLanguageFilename();
 
-    if ((version as number) > 0) {
-      if (this.cache.has(version as number)) {
-        this.populate(this.cache.get(version as number));
-        this.readyPromise = Promise.resolve();
-      } else {
-        // load version specified
-        let url = this.baseUrl + this.versionedFilename.replace("[VERSION]", String(version));
-        this.readyPromise = this.fetchJson(url);
-      }
+    if ((config.getVersion() as number) > 0) {
+      let url = baseUrl + config.getVersionedFilename().replace("[VERSION]", String(config.getVersion()));
+      gvl.populate((await JsonHttpClient.fetch(url)) as VendorList);
     } else {
       /**
-       * whatever it is (or isn't)... it doesn't matter we'll just get the
-       * latest. In this case we may have cached the latest version at key 0.
-       * If we have then we'll just use that instead of making a request.
-       * Otherwise we'll have to load it (and then we'll cache it for next
-       * time)
+       * whatever it is (or isn't)... it doesn't matter we'll just get the latest.
        */
-      if (this.cache.has(this.latestCacheKey)) {
-        this.populate(this.cache.get(this.latestCacheKey));
-        this.readyPromise = Promise.resolve();
-      } else {
-        this.isLatest = true;
-        let url = this.baseUrl + this.latestFilename;
-        this.readyPromise = this.fetchJson(url);
+      let url = baseUrl + config.getLatestFilename();
+      gvl.populate((await JsonHttpClient.fetch(url)) as VendorList);
+    }
+
+    return gvl;
+  }
+
+  /**
+   * changeLanguage - retrieves the purpose language translation and sets the
+   * internal language variable
+   *
+   * @param {string} lang - ISO 639-1 langauge code to change language to
+   * @return {Promise<void | GvlError>} - returns the `readyPromise` and
+   * resolves when this GVL is populated with the data from the language file.
+   */
+  public async changeLanguage(lang: string): Promise<void | GvlError> {
+    const langUpper = lang.toUpperCase();
+
+    if (this.consentLanguages.has(langUpper)) {
+      if (langUpper !== this.language) {
+        this.language = langUpper;
+
+        const url = this.baseUrl + this.languageFilename.replace("[LANG]", lang);
+
+        try {
+          this.populate((await JsonHttpClient.fetch(url)) as VendorList);
+        } catch (err) {
+          throw new GvlError("unable to load language: " + err.message);
+        }
       }
-    }
-  }
-
-  public loadVendorList(vendorList: VendorList) {
-    this.populate(vendorList as Declarations);
-    this.readyPromise = Promise.resolve();
-  }
-
-  /**
-   * emptyLanguageCache
-   *
-   * @param {string} [lang] - Optional ISO 639-1 langauge code to remove from
-   * the cache.  Should be one of the languages in Gvl.consentLanguages set.
-   * If not then the whole cache will be deleted.
-   * @return {boolean} - true if anything was deleted from the cache
-   */
-  public emptyLanguageCache(lang?: string): boolean {
-    let retr = false;
-
-    if (lang === undefined && this.languageCache.size > 0) {
-      this.languageCache = new Map<string, Declarations>();
-      retr = true;
-    } else if (typeof lang === "string" && this.consentLanguages.has(lang.toUpperCase())) {
-      this.languageCache.delete(lang.toUpperCase());
-      retr = true;
-    }
-
-    return retr;
-  }
-
-  /**
-   * emptyCache
-   *
-   * @param {number} [vendorListVersion] - version of the vendor list to delete
-   * from the cache.  If none is specified then the whole cache is deleted.
-   * @return {boolean} - true if anything was deleted from the cache
-   */
-  public emptyCache(vendorListVersion?: number): boolean {
-    let retr = false;
-
-    if (Number.isInteger(vendorListVersion) && vendorListVersion >= 0) {
-      this.cache.delete(vendorListVersion);
-      retr = true;
-    } else if (vendorListVersion === undefined) {
-      this.cache = new Map<number, VendorList>();
-      retr = true;
-    }
-
-    return retr;
-  }
-
-  private cacheLanguage(): void {
-    if (!this.languageCache.has(this.lang_)) {
-      this.languageCache.set(this.lang_, {
-        purposes: this.purposes,
-        specialPurposes: this.specialPurposes,
-        features: this.features,
-        specialFeatures: this.specialFeatures,
-        stacks: this.stacks,
-      });
-    }
-  }
-
-  private async fetchJson(url: string): Promise<void | Error> {
-    try {
-      this.populate((await JsonHttpClient.fetch(url)) as VendorList);
-    } catch (err) {
-      throw new GvlError(err.message);
+    } else {
+      throw new GvlError(`unsupported language ${lang}`);
     }
   }
 
@@ -342,51 +251,6 @@ export class Gvl implements VendorList {
     );
   }
 
-  /**
-   * changeLanguage - retrieves the purpose language translation and sets the
-   * internal language variable
-   *
-   * @param {string} lang - ISO 639-1 langauge code to change language to
-   * @return {Promise<void | GvlError>} - returns the `readyPromise` and
-   * resolves when this Gvl is populated with the data from the language file.
-   */
-  public async changeLanguage(lang: string): Promise<void | GvlError> {
-    const langUpper = lang.toUpperCase();
-
-    if (this.consentLanguages.has(langUpper)) {
-      if (langUpper !== this.lang_) {
-        this.lang_ = langUpper;
-
-        if (this.languageCache.has(langUpper)) {
-          const cached: Declarations = this.languageCache.get(langUpper) as Declarations;
-
-          for (const prop in cached) {
-            if (cached.hasOwnProperty(prop)) {
-              this[prop] = cached[prop];
-            }
-          }
-        } else {
-          // load Language specified
-          const url = this.baseUrl + this.languageFilename.replace("[LANG]", lang);
-
-          try {
-            await this.fetchJson(url);
-
-            this.cacheLanguage();
-          } catch (err) {
-            throw new GvlError("unable to load language: " + err.message);
-          }
-        }
-      }
-    } else {
-      throw new GvlError(`unsupported language ${lang}`);
-    }
-  }
-
-  public get language(): string {
-    return this.lang_;
-  }
-
   private isVendorList(gvlObject: object): gvlObject is VendorList {
     return gvlObject !== undefined && (gvlObject as VendorList).vendors !== undefined;
   }
@@ -412,31 +276,11 @@ export class Gvl implements VendorList {
         this.lastUpdated = new Date(this.lastUpdated);
       }
 
-      this.vendors_ = gvlObject.vendors;
+      this.vendors = gvlObject.vendors;
       this.fullVendorList = gvlObject.vendors;
       this.mapVendors();
-      this.isReady_ = true;
-
-      if (this.isLatest) {
-        /**
-         * If the "LATEST" was requested then this flag will be set to true.
-         * In that case we'll cache the Gvl at the special key
-         */
-
-        this.cache.set(this.latestCacheKey, this.getJson());
-      }
-
-      /**
-       * Whether or not it's the "LATEST" we'll cache the gvl at the version it
-       * is declared to be (if it's not already). to avoid downloading it again
-       * in the future.
-       */
-      if (!this.cache.has(this.vendorListVersion)) {
-        this.cache.set(this.vendorListVersion, this.getJson());
-      }
+      this.ready = true;
     }
-
-    this.cacheLanguage();
   }
 
   private mapVendors(vendorIds?: number[]): void {
@@ -477,8 +321,8 @@ export class Gvl implements VendorList {
     this.vendorIds = new Set(vendorIds);
 
     // assigns vendor ids to their respective maps
-    this.vendors_ = vendorIds.reduce((vendors: {}, vendorId: number): {} => {
-      const vendor: Vendor = this.vendors_[String(vendorId)];
+    this.vendors = vendorIds.reduce((vendors: {}, vendorId: number): {} => {
+      const vendor: Vendor = this.vendors[String(vendorId)];
 
       if (vendor && vendor.deletedDate === undefined) {
         vendor.purposes.forEach((purposeId: number): void => {
@@ -601,16 +445,6 @@ export class Gvl implements VendorList {
   }
 
   /**
-   * vendors
-   *
-   * @return {IntMap<Vendor>} - the list of vendors as it would on the JSON file
-   * except if `narrowVendorsTo` was called, it would be that narrowed list
-   */
-  public get vendors(): IntMap<Vendor> {
-    return this.vendors_;
-  }
-
-  /**
    * narrowVendorsTo - narrows vendors represented in this Gvl to the list of ids passed in
    *
    * @param {number[]} vendorIds - list of ids to narrow this Gvl to
@@ -629,7 +463,7 @@ export class Gvl implements VendorList {
    * with and all the data is populated
    */
   public get isReady(): boolean {
-    return this.isReady_;
+    return this.ready;
   }
 
   public static isInstanceOf(questionableInstance: unknown): questionableInstance is Gvl {
