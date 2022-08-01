@@ -3,7 +3,7 @@ import { Command } from "./Command.js";
 
 export class GetFieldCommand extends Command {
   protected respond(): any {
-    if (!this.param || this.param.length == 0) {
+    if (!this.param || this.param.length === 0) {
       throw new Error("<section>.<field> parameter required");
     }
 

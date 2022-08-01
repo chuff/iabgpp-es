@@ -23,7 +23,7 @@ export class EncodableOptimizedFixedRange extends AbstractEncodableBitStringData
       let bits = [];
       let index = 0;
       for (let i = 0; i < max; i++) {
-        if (i == this.value[index] - 1) {
+        if (i === this.value[index] - 1) {
           bits[i] = 1;
           index++;
         } else {
@@ -35,13 +35,13 @@ export class EncodableOptimizedFixedRange extends AbstractEncodableBitStringData
   }
 
   public decode(bitString: string) {
-    if (bitString.charAt(16) == "1") {
+    if (bitString.charAt(16) === "1") {
       this.value = FixedIntegerRangeEncoder.decode(bitString.substring(17));
     } else {
       let value = [];
       let bits = FixedBitfieldEncoder.decode(bitString.substring(17));
       for (let i = 0; i < bits.length; i++) {
-        if (bits[i] == 1) {
+        if (bits[i] === 1) {
           value.push(i + 1);
         }
       }
@@ -51,7 +51,7 @@ export class EncodableOptimizedFixedRange extends AbstractEncodableBitStringData
 
   public substring(bitString: string, fromIndex: number): string {
     let max = FixedIntegerEncoder.decode(bitString.substring(fromIndex, fromIndex + 16));
-    if (bitString.charAt(fromIndex + 16) == "1") {
+    if (bitString.charAt(fromIndex + 16) === "1") {
       return bitString.substring(fromIndex, 17) + new EncodableFixedIntegerRange().substring(bitString, fromIndex + 17);
     } else {
       return bitString.substring(fromIndex, fromIndex + 17 + max);

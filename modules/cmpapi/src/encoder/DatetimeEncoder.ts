@@ -7,7 +7,7 @@ export class DatetimeEncoder {
   }
 
   public static decode(bitString: string): Date {
-    if (!/^[0-1]*$/.test(bitString) || bitString.length != 36) {
+    if (!/^[0-1]*$/.test(bitString) || bitString.length !== 36) {
       throw new DecodingError("Undecodable Datetime '" + bitString + "'");
     }
 

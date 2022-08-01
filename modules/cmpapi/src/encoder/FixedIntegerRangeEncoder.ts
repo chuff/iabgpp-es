@@ -20,7 +20,7 @@ export class FixedIntegerRangeEncoder {
 
     let bitString = FixedIntegerEncoder.encode(groups.length, 12);
     for (let i = 0; i < groups.length; i++) {
-      if (groups[i].length == 1) {
+      if (groups[i].length === 1) {
         bitString += "0" + FixedIntegerEncoder.encode(groups[i][0], 16);
       } else {
         bitString +=

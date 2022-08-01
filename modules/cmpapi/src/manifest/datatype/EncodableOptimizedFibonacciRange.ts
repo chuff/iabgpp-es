@@ -35,7 +35,7 @@ export class EncodableOptimizedFibonacciRange extends AbstractEncodableBitString
   }
 
   public decode(bitString: string) {
-    if (bitString.charAt(16) == "1") {
+    if (bitString.charAt(16) === "1") {
       this.value = FibonacciIntegerRangeEncoder.decode(bitString.substring(17));
     } else {
       let value = [];
@@ -51,7 +51,7 @@ export class EncodableOptimizedFibonacciRange extends AbstractEncodableBitString
 
   public substring(bitString: string, fromIndex: number): string {
     let max = FixedIntegerEncoder.decode(bitString.substring(fromIndex, fromIndex + 16));
-    if (bitString.charAt(fromIndex + 16) == "1") {
+    if (bitString.charAt(fromIndex + 16) === "1") {
       return (
         bitString.substring(fromIndex, 17) + new EncodableFibonacciIntegerRange().substring(bitString, fromIndex + 17)
       );

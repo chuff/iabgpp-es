@@ -31,15 +31,11 @@ export class EventListenerQueue {
     return this.eventQueue.delete(listenerId);
   }
 
-  public exec(): void {
+  public exec(section: string): void {
     this.eventQueue.forEach((eventItem: EventItem, listenerId: number): void => {
-      new GetSectionCommand(
-        this.cmpApiContext,
-        eventItem.callback,
-        eventItem.param,
-        listenerId,
-        eventItem.next
-      ).execute();
+      if (!eventItem.param || eventItem.param.length === 0 || section === eventItem.param) {
+        new GetSectionCommand(this.cmpApiContext, eventItem.callback, section, listenerId, eventItem.next).execute();
+      }
     });
   }
 

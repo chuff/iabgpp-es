@@ -32,7 +32,7 @@ export class FibonacciIntegerEncoder {
   }
 
   public static decode(bitString: string): number {
-    if (!/^[0-1]*$/.test(bitString) || bitString.length < 2 || bitString.indexOf("11") != bitString.length - 2) {
+    if (!/^[0-1]*$/.test(bitString) || bitString.length < 2 || bitString.indexOf("11") !== bitString.length - 2) {
       throw new DecodingError("Undecodable FibonacciInteger '" + bitString + "'");
     }
 

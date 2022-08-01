@@ -11,7 +11,7 @@ export class FixedStringEncoder {
     let bitString = "";
     for (let i = 0; i < value.length; i++) {
       let code = value.charCodeAt(i);
-      if (code == 32) {
+      if (code === 32) {
         // space
         bitString += FixedIntegerEncoder.encode(63, 6);
       } else if (code >= 65) {
@@ -25,7 +25,7 @@ export class FixedStringEncoder {
   }
 
   public static decode(bitString: string): string {
-    if (!/^[0-1]*$/.test(bitString) || bitString.length % 6 != 0) {
+    if (!/^[0-1]*$/.test(bitString) || bitString.length % 6 !== 0) {
       throw new DecodingError("Undecodable FixedString '" + bitString + "'");
     }
 
@@ -33,7 +33,7 @@ export class FixedStringEncoder {
 
     for (let i = 0; i < bitString.length; i += 6) {
       let code = FixedIntegerEncoder.decode(bitString.substring(i, i + 6));
-      if (code == 63) {
+      if (code === 63) {
         value += " ";
       } else {
         value += String.fromCharCode(code + 65);

@@ -4,11 +4,11 @@ import { CmpStatus } from "./status/CmpStatus.js";
 import { DisplayStatus } from "./status/DisplayStatus.js";
 import { EventStatus } from "./status/EventStatus.js";
 import { CallResponder } from "./CallResponder.js";
-import { GppModel } from "./manifest/GppModel.js";
+import { TcfEuV2 } from "./manifest/section/TcfEuV2.js";
+import { UspV1 } from "./manifest/section/UspV1.js";
 
 export class CmpApi {
   private callResponder: CallResponder;
-  private numUpdates = 0;
   private cmpApiContext: CmpApiContext;
 
   /**
@@ -24,8 +24,9 @@ export class CmpApi {
     this.callResponder = new CallResponder(this.cmpApiContext, customCommands);
   }
 
-  public fireUpdate(uiVisible = false): void {
+  public fireUpdate(currentAPI?: string, uiVisible = false): void {
     this.cmpApiContext.cmpStatus = CmpStatus.LOADED;
+    this.cmpApiContext.currentAPI;
 
     if (uiVisible) {
       this.cmpApiContext.cmpDisplayStatus = DisplayStatus.VISIBLE;
@@ -40,13 +41,12 @@ export class CmpApi {
       }
     }
 
-    this.cmpApiContext.eventQueue.exec();
-
-    this.numUpdates++;
-  }
-
-  public setCurrentAPI(currentAPI: string) {
-    this.cmpApiContext.currentAPI = currentAPI;
+    if (currentAPI && currentAPI.length > 0) {
+      this.cmpApiContext.eventQueue.exec(currentAPI);
+    } else {
+      this.cmpApiContext.eventQueue.exec(TcfEuV2.NAME);
+      this.cmpApiContext.eventQueue.exec(UspV1.NAME);
+    }
   }
 
   public getCurrentAPI() {

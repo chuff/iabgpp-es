@@ -18,10 +18,10 @@ export class GppModel {
   public setFieldValue(sectionName: string, fieldName: string, value: any) {
     let section: EncodableSection = null;
     if (!this.sections.has(sectionName)) {
-      if (sectionName == TcfEuV2.NAME) {
+      if (sectionName === TcfEuV2.NAME) {
         section = new TcfEuV2();
         this.sections.set(TcfEuV2.NAME, section);
-      } else if (sectionName == UspV1.NAME) {
+      } else if (sectionName === UspV1.NAME) {
         section = new UspV1();
         this.sections.set(UspV1.NAME, section);
       }
@@ -93,10 +93,10 @@ export class GppModel {
 
     let sectionIds = header.getFieldValue("sectionIds");
     for (let i = 0; i < sectionIds; i++) {
-      if (sectionIds[i] == TcfEuV2.ID) {
+      if (sectionIds[i] === TcfEuV2.ID) {
         let section = new TcfEuV2(encodedSections[i + 1]);
         this.sections.set(TcfEuV2.NAME, section);
-      } else if (sectionIds[i] == UspV1.ID) {
+      } else if (sectionIds[i] === UspV1.ID) {
         let section = new UspV1(encodedSections[i + 1]);
         this.sections.set(UspV1.NAME, section);
       }
@@ -114,10 +114,10 @@ export class GppModel {
   public decodeSection(sectionName: string, encodedString: string): void {
     let section: EncodableSection = null;
     if (!this.sections.has(sectionName)) {
-      if (sectionName == TcfEuV2.NAME) {
+      if (sectionName === TcfEuV2.NAME) {
         section = new TcfEuV2();
         this.sections.set(TcfEuV2.NAME, section);
-      } else if (sectionName == UspV1.NAME) {
+      } else if (sectionName === UspV1.NAME) {
         section = new UspV1();
         this.sections.set(UspV1.NAME, section);
       }

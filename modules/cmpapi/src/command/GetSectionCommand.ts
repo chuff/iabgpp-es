@@ -3,7 +3,7 @@ import { EncodableSection } from "../manifest/section/EncodableSection.js";
 
 export class GetSectionCommand extends Command {
   protected respond(): any {
-    if (!this.param || this.param.length == 0) {
+    if (!this.param || this.param.length === 0) {
       throw new Error("<section> parameter required");
     }
 

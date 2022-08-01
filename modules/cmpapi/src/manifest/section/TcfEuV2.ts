@@ -177,7 +177,7 @@ export class TcfEuV2 extends AbstractEncodableSegmentedBitStringSection {
   //Overriden
   public setFieldValue(fieldName: string, value: any): void {
     super.setFieldValue(fieldName, value);
-    if (fieldName != "created" && fieldName != "lastUpdated") {
+    if (fieldName !== "created" && fieldName !== "lastUpdated") {
       const date = new Date();
       const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 

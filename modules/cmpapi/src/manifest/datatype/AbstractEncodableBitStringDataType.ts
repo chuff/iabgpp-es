@@ -6,7 +6,7 @@ export abstract class AbstractEncodableBitStringDataType<T> {
   }
 
   public hasValue(): boolean {
-    return this.value != undefined && this.value != null;
+    return this.value !== undefined && this.value !== null;
   }
 
   public getValue(): T {

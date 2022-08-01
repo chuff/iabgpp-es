@@ -20,7 +20,7 @@ export class EncodableFixedIntegerRange extends AbstractEncodableBitStringDataTy
     let count = FixedIntegerEncoder.decode(bitString.substring(fromIndex, fromIndex + 12));
     let index = fromIndex + 12;
     for (let i = 0; i < count; i++) {
-      if (bitString.charAt(index) == "1") {
+      if (bitString.charAt(index) === "1") {
         index += 33;
       } else {
         index += 17;
