@@ -20,6 +20,12 @@ describe("encoder.FixedIntegerRangeEncoder", (): void => {
     );
   });
 
+  it("should encode [5,2,7,6] to '00000000001000000000000000010100000000000001010000000000000111'", (): void => {
+    expect(FixedIntegerRangeEncoder.encode([5, 2, 7, 6])).to.eql(
+      "00000000001000000000000000010100000000000001010000000000000111"
+    );
+  });
+
   it("should encode [3,5,6,7,8] to '00000000001000000000000000011100000000000001010000000000001000'", (): void => {
     expect(FixedIntegerRangeEncoder.encode([3, 5, 6, 7, 8])).to.eql(
       "00000000001000000000000000011100000000000001010000000000001000"

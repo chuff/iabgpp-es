@@ -4,6 +4,8 @@ import { FixedIntegerEncoder } from "./FixedIntegerEncoder.js";
 
 export class FixedIntegerRangeEncoder {
   public static encode(value: number[]): string {
+    value.sort();
+
     let groups: number[][] = [];
 
     let groupStartIndex = 0;

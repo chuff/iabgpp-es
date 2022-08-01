@@ -18,6 +18,10 @@ describe("encoder.FibonacciIntegerRangeEncoder", (): void => {
     expect(FibonacciIntegerRangeEncoder.encode([2, 5, 6, 7])).to.eql("000000000010001110011011");
   });
 
+  it("should encode [6,7,2,5] to '000000000010001110011011'", (): void => {
+    expect(FibonacciIntegerRangeEncoder.encode([6, 7, 2, 5])).to.eql("000000000010001110011011");
+  });
+
   it("should encode [3,5,6,7,8] to '0000000000100001110110011'", (): void => {
     expect(FibonacciIntegerRangeEncoder.encode([3, 5, 6, 7, 8])).to.eql("0000000000100001110110011");
   });
