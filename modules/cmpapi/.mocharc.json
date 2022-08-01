@@ -24,6 +24,7 @@
     "./test/manifest/section/TcfEuV2.test.ts",
     "./test/manifest/section/UspV1.test.ts",
     "./test/manifest/section/UspV1Legacy.test.ts",
+    "./test/manifest/GppModel.test.ts",
     "./test/Gvl.test.ts"
   ]
 }

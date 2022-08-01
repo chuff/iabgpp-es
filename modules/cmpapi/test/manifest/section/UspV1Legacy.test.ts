@@ -1,7 +1,7 @@
 import { UspV1Legacy } from "../../../src/manifest/section/UspV1Legacy";
 import { expect } from "chai";
 
-describe("manifest.section.UspV1", (): void => {
+describe("manifest.section.UspV1Legacy", (): void => {
   it("should default encode 1---", (): void => {
     let uspv1 = new UspV1Legacy();
     expect(uspv1.encode()).to.eql("1---");

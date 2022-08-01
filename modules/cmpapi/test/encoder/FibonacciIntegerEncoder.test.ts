@@ -75,10 +75,4 @@ describe("encoder.FibonacciIntegerEncoder", (): void => {
       FibonacciIntegerEncoder.decode("0110000000");
     }).to.throw();
   });
-
-  /*
-  it("should substring '100111' from index 1 to '0011'", (): void => {
-    expect(FibonacciIntegerEncoder.substring("100111", 1)).to.eql("0011");
-  });
-  */
 });

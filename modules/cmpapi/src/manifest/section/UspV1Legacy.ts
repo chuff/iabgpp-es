@@ -40,7 +40,7 @@ export class UspV1Legacy implements EncodableSection {
     if (this.fields.has(fieldName)) {
       this.fields.set(fieldName, value);
     } else {
-      console.log(fieldName + " not found");
+      throw new Error(fieldName + " not found");
     }
   }
 

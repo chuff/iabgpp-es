@@ -49,14 +49,4 @@ describe("encoder.FixedIntegerEncoder", (): void => {
   it("should decode '0000001000' string to 8", (): void => {
     expect(FixedIntegerEncoder.decode("0000001000")).to.eql(8);
   });
-
-  /*
-  it("should substring '10001' from index 1 length 3 to '000'", (): void => {
-    expect(FixedIntegerEncoder.substring("10001", 1, 3)).to.eql("000");
-  });
-
-  it("should substring '01110' from index 1 length 3 to '111'", (): void => {
-    expect(FixedIntegerEncoder.substring("01110", 1, 3)).to.eql("111");
-  });
-  */
 });

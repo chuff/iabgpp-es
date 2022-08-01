@@ -30,14 +30,4 @@ describe("encoder.FixedStringEncoder", (): void => {
       FixedStringEncoder.decode("2");
     }).to.throw();
   });
-
-  /*
-  it("should substring '10000000000001' from index 1 length 2 to '000000000000'", (): void => {
-    expect(FixedStringEncoder.substring("10000000000001", 1, 2)).to.eql("000000000000");
-  });
-
-  it("should substring '01111111111110' from index 1 length 2 to '111111111111'", (): void => {
-    expect(FixedStringEncoder.substring("01111111111110", 1, 2)).to.eql("111111111111");
-  });
-  */
 });

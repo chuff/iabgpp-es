@@ -57,12 +57,4 @@ describe("encoder.FibonacciIntegerRangeEncoder", (): void => {
       FibonacciIntegerRangeEncoder.decode("000000000002");
     }).to.throw();
   });
-
-  /*
-  it("should substring '100000000001000011101100110' from index 1 to '0000000000100001110110011'", (): void => {
-    expect(FibonacciIntegerRangeEncoder.substring("100000000001000011101100110", 1)).to.eql(
-      "0000000000100001110110011"
-    );
-  });
-  */
 });

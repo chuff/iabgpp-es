@@ -32,7 +32,7 @@ export class GppModel {
     if (section) {
       section.setFieldValue(fieldName, value);
     } else {
-      console.log(sectionName + " not found");
+      throw new Error(sectionName + " not found");
     }
   }
 
@@ -77,7 +77,7 @@ export class GppModel {
     }
 
     let header = new HeaderV1();
-    header.setFieldValue("sectionIds", sectionIds);
+    header.setFieldValue("SectionIds", sectionIds);
     encodedSections.unshift(header.encode());
 
     let encodedString = encodedSections.join("~");
@@ -91,8 +91,8 @@ export class GppModel {
     let header = new HeaderV1(encodedSections[0]);
     this.sections.set(HeaderV1.name, header);
 
-    let sectionIds = header.getFieldValue("sectionIds");
-    for (let i = 0; i < sectionIds; i++) {
+    let sectionIds = header.getFieldValue("SectionIds");
+    for (let i = 0; i < sectionIds.length; i++) {
       if (sectionIds[i] === TcfEuV2.ID) {
         let section = new TcfEuV2(encodedSections[i + 1]);
         this.sections.set(TcfEuV2.NAME, section);
@@ -127,8 +127,6 @@ export class GppModel {
 
     if (section) {
       section.decode(encodedString);
-    } else {
-      console.log(sectionName + " not found");
     }
   }
 

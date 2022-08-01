@@ -48,14 +48,4 @@ describe("encoder.BooleanEncoder", (): void => {
       BooleanEncoder.decode("");
     }).to.throw();
   });
-
-  /*
-  it("should substring '101' from index 1 to '0'", (): void => {
-    expect(BooleanEncoder.substring("101", 1)).to.eql("0");
-  });
-
-  it("should substring '010' from index 1 to '1'", (): void => {
-    expect(BooleanEncoder.substring("010", 1)).to.eql("1");
-  });
-  */
 });

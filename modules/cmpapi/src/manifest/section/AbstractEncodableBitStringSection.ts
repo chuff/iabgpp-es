@@ -30,7 +30,7 @@ export abstract class AbstractEncodableBitStringSection implements EncodableSect
     if (this.fields.has(fieldName)) {
       this.fields.get(fieldName).setValue(value);
     } else {
-      console.log(fieldName + " not found");
+      throw new Error(fieldName + " not found");
     }
   }
 

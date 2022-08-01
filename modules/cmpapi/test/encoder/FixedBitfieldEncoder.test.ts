@@ -63,14 +63,4 @@ describe("encoder.FixedBitfieldEncoder", (): void => {
       FixedBitfieldEncoder.decode("2");
     }).to.throw();
   });
-
-  /*
-  it("should substring '10001' from index 1 length 3 to '000'", (): void => {
-    expect(FixedBitfieldEncoder.substring("10001", 1, 3)).to.eql("000");
-  });
-
-  it("should substring '01110' from index 1 length 3 to '111'", (): void => {
-    expect(FixedBitfieldEncoder.substring("01110", 1, 3)).to.eql("111");
-  });
-  */
 });
