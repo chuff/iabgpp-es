@@ -9,8 +9,6 @@ export class AddEventListenerCommand extends Command {
     };
 
     this.cmpApiContext.eventQueue.add(eventListener);
-
-    this.invokeCallback(eventListener);
     return eventListener;
   }
 }

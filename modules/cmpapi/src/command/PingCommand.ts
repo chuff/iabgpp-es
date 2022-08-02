@@ -2,7 +2,7 @@ import { Command } from "./Command.js";
 
 export class PingCommand extends Command {
   protected respond() {
-    let response = {
+    let ping = {
       gppVersion: this.cmpApiContext.gppVersion,
       cmpStatus: this.cmpApiContext.cmpStatus,
       cmpDisplayStatus: this.cmpApiContext.cmpDisplayStatus,
@@ -12,7 +12,7 @@ export class PingCommand extends Command {
       cmpVersion: this.cmpApiContext.cmpVersion,
     };
 
-    this.invokeCallback(response);
-    return response;
+    this.invokeCallback(ping);
+    return ping;
   }
 }

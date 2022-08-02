@@ -33,7 +33,10 @@ export class EventListenerQueue {
 
   public exec(section: string): void {
     this.eventQueue.forEach((eventItem: EventItem, listenerId: number): void => {
-      if (!eventItem.param || eventItem.param.length === 0 || section === eventItem.param) {
+      if (
+        this.cmpApiContext.gppModel.hasSection(section) &&
+        (!eventItem.param || eventItem.param.length === 0 || section === eventItem.param)
+      ) {
         new GetSectionCommand(this.cmpApiContext, eventItem.callback, section, listenerId, eventItem.next).execute();
       }
     });

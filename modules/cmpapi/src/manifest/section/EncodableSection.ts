@@ -11,7 +11,7 @@ export interface EncodableSection {
 
   setFieldValue(fieldName: string, value: any): void;
 
-  toObject(): any;
+  toObj(): any;
 
   encode(): string;
 

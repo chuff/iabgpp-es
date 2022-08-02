@@ -7,7 +7,11 @@ export class GetSectionCommand extends Command {
       throw new Error("<section> parameter required");
     }
 
-    let section: EncodableSection = this.cmpApiContext.gppModel.getSection(this.param);
+    let section = null;
+    if (this.cmpApiContext.gppModel.hasSection(this.param)) {
+      section = this.cmpApiContext.gppModel.getSection(this.param);
+    }
+    this.invokeCallback(section);
     return section;
   }
 }

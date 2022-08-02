@@ -15,12 +15,6 @@ type PurposeOrFeature = "purpose" | "feature";
 type PurposeSubType = "consent" | "legInt" | "flexible";
 
 export class GvlUrlConfig {
-  private baseUrl: string;
-  private version: string | number;
-  private latestFilename = "vendor-list.json";
-  private versionedFilename = "archives/vendor-list-v[VERSION].json";
-  private languageFilename = "purposes-[LANG].json";
-
   /**
    * baseUrl - Entities using the vendor-list.json are required by the iab to
    * host their own copy of it to reduce the load on the iab's infrastructure
@@ -33,54 +27,19 @@ export class GvlUrlConfig {
    *
    * ](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20Consent%20string%20and%20vendor%20list%20formats%20v2.md#caching-the-global-vendor-list)
    */
-  public constructor(baseUrl: string) {
-    if (!baseUrl || baseUrl.length === 0) {
-      throw new GvlError("Invalid baseUrl: '" + baseUrl + "'");
-    }
-
-    if (/^https?:\/\/vendorlist\.consensu\.org\//.test(baseUrl)) {
-      throw new GvlError(
-        "Invalid baseUrl!  You may not pull directly from vendorlist.consensu.org and must provide your own cache"
-      );
-    }
-
-    // if a trailing slash was forgotten
-    if (baseUrl.length > 0 && baseUrl[baseUrl.length - 1] !== "/") {
-      baseUrl += "/";
-    }
-
-    this.baseUrl = baseUrl;
-  }
-
-  public getBaseUrl() {
-    return this.baseUrl;
-  }
+  public baseUrl: string;
 
   /**
    * @param {string} - the latest is assumed to be vendor-list.json because
    * that is what the iab uses, but it could be different... if you want
    */
-  public withVersion(version: string | number): GvlUrlConfig {
-    this.version = version;
-    return this;
-  }
-
-  public getVersion() {
-    return this.version;
-  }
+  public version: string | number;
 
   /**
    * @param {string} - the latest is assumed to be vendor-list.json because
    * that is what the iab uses, but it could be different... if you want
    */
-  public withLatestFilename(latestFilename: string): GvlUrlConfig {
-    this.latestFilename = latestFilename;
-    return this;
-  }
-
-  public getLatestFilename() {
-    return this.latestFilename;
-  }
+  public latestFilename: string;
 
   /**
    * @param {string} - the versioned name is assumed to be
@@ -95,14 +54,8 @@ export class GvlUrlConfig {
    * Gvl.versionedFilename = "vendorlist?getVersion=[VERSION]";
    * ```
    */
-  public withVersionedFilename(versionedFilename: string): GvlUrlConfig {
-    this.versionedFilename = versionedFilename;
-    return this;
-  }
 
-  public getVersionedFilename() {
-    return this.versionedFilename;
-  }
+  public versionedFilename: string;
 
   /**
    * @param {string} - Translations of the names and descriptions for Purposes,
@@ -119,14 +72,7 @@ export class GvlUrlConfig {
    * Gvl.languageFilename = "purposes?getPurposes=[LANG]";
    * ```
    */
-  public withLanguageFilename(languageFilename: string): GvlUrlConfig {
-    this.languageFilename = languageFilename;
-    return this;
-  }
-
-  public getLanguageFilename() {
-    return this.languageFilename;
-  }
+  public languageFilename: string;
 }
 
 /**
@@ -152,14 +98,15 @@ export class Gvl implements VendorList {
   public language: string = Gvl.DEFAULT_LANGUAGE;
 
   private vendorIds: Set<number>;
-  private baseUrl: string;
-  private languageFilename: string;
   private ready = false;
   private fullVendorList: IntMap<Vendor>;
   private byPurposeVendorMap: ByPurposeVendorMap;
   private bySpecialPurposeVendorMap: IdSetMap;
   private byFeatureVendorMap: IdSetMap;
   private bySpecialFeatureVendorMap: IdSetMap;
+
+  private baseUrl: string;
+  private languageFilename = "purposes-[LANG].json";
 
   public static fromVendorList(vendorList: VendorList): Gvl {
     let gvl = new Gvl();
@@ -179,20 +126,48 @@ export class Gvl implements VendorList {
    * Vendor List'
    */
   public static async fromUrl(config: GvlUrlConfig): Promise<Gvl> {
-    let baseUrl = config.getBaseUrl();
+    let baseUrl = config.baseUrl;
+
+    if (!baseUrl || baseUrl.length === 0) {
+      throw new GvlError("Invalid baseUrl: '" + baseUrl + "'");
+    }
+
+    if (/^https?:\/\/vendorlist\.consensu\.org\//.test(baseUrl)) {
+      throw new GvlError(
+        "Invalid baseUrl!  You may not pull directly from vendorlist.consensu.org and must provide your own cache"
+      );
+    }
+
+    // if a trailing slash was forgotten
+    if (baseUrl.length > 0 && baseUrl[baseUrl.length - 1] !== "/") {
+      baseUrl += "/";
+    }
 
     let gvl = new Gvl();
     gvl.baseUrl = baseUrl;
-    gvl.languageFilename = config.getLanguageFilename();
 
-    if ((config.getVersion() as number) > 0) {
-      let url = baseUrl + config.getVersionedFilename().replace("[VERSION]", String(config.getVersion()));
+    if (config.languageFilename) {
+      gvl.languageFilename = config.languageFilename;
+    } else {
+      gvl.languageFilename = "purposes-[LANG].json";
+    }
+
+    if ((config.version as number) > 0) {
+      let versionedFilename = config.versionedFilename;
+      if (!versionedFilename) {
+        versionedFilename = "archives/vendor-list-v[VERSION].json";
+      }
+      let url = baseUrl + versionedFilename.replace("[VERSION]", String(config.version));
       gvl.populate((await JsonHttpClient.fetch(url)) as VendorList);
     } else {
       /**
        * whatever it is (or isn't)... it doesn't matter we'll just get the latest.
        */
-      let url = baseUrl + config.getLatestFilename();
+      let latestFilename = config.latestFilename;
+      if (!latestFilename) {
+        latestFilename = "vendor-list.json";
+      }
+      let url = baseUrl + latestFilename;
       gvl.populate((await JsonHttpClient.fetch(url)) as VendorList);
     }
 

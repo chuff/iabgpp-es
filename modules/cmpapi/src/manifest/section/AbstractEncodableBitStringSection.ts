@@ -69,7 +69,7 @@ export abstract class AbstractEncodableBitStringSection implements EncodableSect
   }
 
   //Overriden
-  public toObject() {
+  public toObj(): any {
     let obj = {};
     for (let i = 0; i < this.fieldOrder.length; i++) {
       let fieldName = this.fieldOrder[i];

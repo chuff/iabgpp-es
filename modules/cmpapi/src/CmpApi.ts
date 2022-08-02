@@ -6,6 +6,8 @@ import { EventStatus } from "./status/EventStatus.js";
 import { CallResponder } from "./CallResponder.js";
 import { TcfEuV2 } from "./manifest/section/TcfEuV2.js";
 import { UspV1 } from "./manifest/section/UspV1.js";
+import { Gvl, GvlUrlConfig } from "./Gvl.js";
+import { VendorList } from "./gvlmodel/VendorList.js";
 
 export class CmpApi {
   private callResponder: CallResponder;
@@ -26,7 +28,7 @@ export class CmpApi {
 
   public fireUpdate(currentAPI?: string, uiVisible = false): void {
     this.cmpApiContext.cmpStatus = CmpStatus.LOADED;
-    this.cmpApiContext.currentAPI;
+    this.cmpApiContext.currentAPI = currentAPI;
 
     if (uiVisible) {
       this.cmpApiContext.cmpDisplayStatus = DisplayStatus.VISIBLE;
@@ -49,15 +51,19 @@ export class CmpApi {
     }
   }
 
-  public getCurrentAPI() {
+  public getCurrentAPI(): string {
     return this.cmpApiContext.currentAPI;
+  }
+
+  public setCurrentAPI(currentAPI: string): void {
+    this.cmpApiContext.currentAPI = currentAPI;
   }
 
   public setGppString(encodedGppString: string): void {
     this.cmpApiContext.gppModel.decode(encodedGppString);
   }
 
-  public getGppString() {
+  public getGppString(): string {
     return this.cmpApiContext.gppModel.encode();
   }
 
@@ -69,15 +75,23 @@ export class CmpApi {
     return this.cmpApiContext.gppModel.encodeSection(sectionName);
   }
 
-  public setFieldValue(sectionName: string, fieldName: string, value: any) {
+  public setFieldValue(sectionName: string, fieldName: string, value: any): void {
     this.cmpApiContext.gppModel.setFieldValue(sectionName, fieldName, value);
   }
 
-  public getFieldValue(sectionName: string, fieldName: string) {
+  public getFieldValue(sectionName: string, fieldName: string): any {
     return this.cmpApiContext.gppModel.getFieldValue(sectionName, fieldName);
   }
 
-  public getSection(sectionName: string) {
+  public getSection(sectionName: string): any {
     return this.cmpApiContext.gppModel.getSection(sectionName);
+  }
+
+  public getGvlFromVendorList(vendorList: VendorList): Gvl {
+    return Gvl.fromVendorList(vendorList);
+  }
+
+  public async getGvlFromUrl(gvlUrlConfig: GvlUrlConfig): Promise<Gvl> {
+    return Gvl.fromUrl(gvlUrlConfig);
   }
 }

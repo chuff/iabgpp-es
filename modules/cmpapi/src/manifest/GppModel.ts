@@ -58,7 +58,7 @@ export class GppModel {
 
   public getSection(sectionName: string) {
     if (this.sections.has(sectionName)) {
-      return this.sections.get(sectionName).toObject();
+      return this.sections.get(sectionName).toObj();
     } else {
       return null;
     }
@@ -135,7 +135,7 @@ export class GppModel {
     for (let i = 0; i < this.sectionOrder.length; i++) {
       let sectionName = this.sectionOrder[i];
       if (this.sections.has(sectionName)) {
-        obj[sectionName] = this.sections.get(sectionName).toObject();
+        obj[sectionName] = this.sections.get(sectionName).toObj();
       }
     }
 

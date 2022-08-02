@@ -14,7 +14,8 @@ export class GetFieldCommand extends Command {
     let sectionName = parts[0];
     let fieldName = parts[1];
 
-    let value = this.cmpApiContext.gppModel.getFieldValue(sectionName, fieldName);
-    return value;
+    let fieldValue = this.cmpApiContext.gppModel.getFieldValue(sectionName, fieldName);
+    this.invokeCallback(fieldValue);
+    return fieldValue;
   }
 }

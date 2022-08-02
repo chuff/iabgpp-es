@@ -4,12 +4,11 @@ import { Command } from "./Command.js";
 // Deprcated
 export class GetTcDataCommand extends Command {
   protected respond(): any {
-    let response = null;
-    let section: EncodableSection = this.cmpApiContext.gppModel.getSection("tcfeuv2");
-    if (section) {
-      response = section.toObject();
+    let section = null;
+    if (this.cmpApiContext.gppModel.hasSection("tcfeuvs")) {
+      section = this.cmpApiContext.gppModel.getSection("tcfeuv2");
     }
-    this.invokeCallback(response);
-    return null;
+    this.invokeCallback(section);
+    return section;
   }
 }

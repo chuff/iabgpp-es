@@ -45,7 +45,7 @@ export class UspV1Legacy implements EncodableSection {
   }
 
   //Overriden
-  public toObject() {
+  public toObj(): any {
     let obj = {};
     for (const fieldName of this.fields.keys()) {
       let value = this.fields.get(fieldName);

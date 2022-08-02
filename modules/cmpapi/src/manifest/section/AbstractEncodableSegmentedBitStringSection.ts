@@ -78,7 +78,7 @@ export abstract class AbstractEncodableSegmentedBitStringSection implements Enco
   }
 
   //Overriden
-  public toObject() {
+  public toObj(): any {
     let obj = {};
     for (let i = 0; i < this.segments.length; i++) {
       for (let j = 0; j < this.segments[i].length; j++) {
