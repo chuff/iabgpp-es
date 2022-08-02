@@ -1,5 +1,3 @@
-## Create CmpApi
-
 ## Methods available to CMPs
 ````javascript
 public constructor(cmpId: number, cmpVersion: number, customCommands?: CustomCommands)
@@ -17,7 +15,18 @@ public getGvlFromVendorList(vendorList: VendorList): Gvl {
 public async getGvlFromUrl(gvlUrlConfig: GvlUrlConfig): Promise<Gvl> {
 ````
 
-## CMP Example
+## Commands available to consumers
+````javascript
+__gpp("addEventListener", callback?, param?)
+__gpp("getField", callback?, param?)
+__gpp("getGPPString", callback?, param?)
+__gpp("getSection", callback?, param?)
+__gpp("hasSection", callback?, param?)
+__gpp("ping", callback?, param?)
+__gpp("removeEventListener", callback?, param?)
+````
+
+## CMP usage Example
 ````javascript
 <script>
   import {CmpApi} from '@iabgpp/cmpapi';
@@ -30,18 +39,7 @@ public async getGvlFromUrl(gvlUrlConfig: GvlUrlConfig): Promise<Gvl> {
 </script>
 ````
 
-## Commands available to consumers
-````javascript
-__gpp("addEventListener", callback?, param?)
-__gpp("getField", callback?, param?)
-__gpp("getGPPString", callback?, param?)
-__gpp("getSection", callback?, param?)
-__gpp("hasSection", callback?, param?)
-__gpp("ping", callback?, param?)
-__gpp("removeEventListener", callback?, param?)
-````
-
-# Consumer example
+## Consumer usage example
 ````javascript
 <script src="/js/stub/stub.js"></script>
 <script>
