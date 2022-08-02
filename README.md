@@ -1,3 +1,6 @@
+## Description
+GPP is an IAB framework that standardizes and combines region specific consent strings.
+
 ## Methods available to CMPs
 ````javascript
 constructor(cmpId: number, cmpVersion: number, customCommands?: CustomCommands)
