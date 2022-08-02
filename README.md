@@ -1,18 +1,18 @@
 ## Methods available to CMPs
 ````javascript
-public constructor(cmpId: number, cmpVersion: number, customCommands?: CustomCommands)
-public fireUpdate(currentAPI?: string, uiVisible = false): void
-public getCurrentAPI(): string
-public setCurrentAPI(currentAPI: string): void {
-public setGppString(encodedGppString: string): void {
-public getGppString(): string {
-public setSectionString(sectionName: string, encodedSectionString: string): void {
-public getSectionString(sectionName: string): string {
-public setFieldValue(sectionName: string, fieldName: string, value: any): void {
-public getFieldValue(sectionName: string, fieldName: string): any {
-public getSection(sectionName: string): any {
-public getGvlFromVendorList(vendorList: VendorList): Gvl {
-public async getGvlFromUrl(gvlUrlConfig: GvlUrlConfig): Promise<Gvl> {
+constructor(cmpId: number, cmpVersion: number, customCommands?: CustomCommands)
+fireUpdate(currentAPI?: string, uiVisible = false): void
+getCurrentAPI(): string
+setCurrentAPI(currentAPI: string): void {
+setGppString(encodedGppString: string): void {
+getGppString(): string {
+setSectionString(sectionName: string, encodedSectionString: string): void {
+getSectionString(sectionName: string): string {
+setFieldValue(sectionName: string, fieldName: string, value: any): void {
+getFieldValue(sectionName: string, fieldName: string): any {
+getSection(sectionName: string): any {
+getGvlFromVendorList(vendorList: VendorList): Gvl {
+async getGvlFromUrl(gvlUrlConfig: GvlUrlConfig): Promise<Gvl> {
 ````
 
 ## Commands available to consumers
