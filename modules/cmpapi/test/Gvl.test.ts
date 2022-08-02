@@ -50,28 +50,6 @@ describe("Gvl", (): void => {
     XMLHttpTestTools.beforeEach();
   });
 
-  it("should fail to set baseUrl to http://vendorlist.consensu.org/", (): void => {
-    // calls constructor
-    expect((): void => {
-      new GvlUrlConfig("http://vendorlist.consensu.org/");
-    }).to.throw();
-  });
-
-  it("should fail to set baseUrl to https://vendorlist.consensu.org/ (secure url)", (): void => {
-    // calls constructor
-    expect((): void => {
-      new GvlUrlConfig("https://vendorlist.consensu.org/");
-    }).to.throw();
-  });
-
-  it("should add a trailing slash to baseUrl if one is not there", (): void => {
-    const myURL = "http://vendorlist.mysweetcmp.mgr.consensu.org";
-
-    let config = new GvlUrlConfig(myURL);
-
-    expect(config.getBaseUrl()).to.equal(myURL + "/");
-  });
-
   it("should propogate all values with passed in json", (): void => {
     const gvl: Gvl = Gvl.fromVendorList(vendorlistJson);
 
@@ -79,7 +57,8 @@ describe("Gvl", (): void => {
   });
 
   it("should get latest Gvl if nothing is passed to the constructor", async (): Promise<void> => {
-    let config = new GvlUrlConfig("http://sweetcmp.com/");
+    let config = new GvlUrlConfig();
+    config.baseUrl = "http://sweetcmp.com/";
     let promise = Gvl.fromUrl(config);
 
     expect(XMLHttpTestTools.requests.length).to.equal(1);
@@ -94,7 +73,9 @@ describe("Gvl", (): void => {
   });
 
   it('should get latest Gvl if "LATEST" is passed to the constructor', async (): Promise<void> => {
-    let config = new GvlUrlConfig("http://sweetcmp.com/").withVersion("LATEST");
+    let config = new GvlUrlConfig();
+    config.baseUrl = "http://sweetcmp.com";
+    config.version = "LATEST";
     let promise = Gvl.fromUrl(config);
 
     expect(XMLHttpTestTools.requests.length).to.equal(1);
@@ -113,7 +94,9 @@ describe("Gvl", (): void => {
 
   it("should get versioned Gvl if version number is passed", async (): Promise<void> => {
     let version = 22;
-    let config = new GvlUrlConfig("http://sweetcmp.com/").withVersion(version);
+    let config = new GvlUrlConfig();
+    config.baseUrl = "http://sweetcmp.com";
+    config.version = version;
     let promise = Gvl.fromUrl(config);
 
     expect(XMLHttpTestTools.requests.length).to.equal(1);
@@ -132,7 +115,9 @@ describe("Gvl", (): void => {
 
   it("should get versioned Gvl if version number as string is passed", async (): Promise<void> => {
     let version = 23;
-    let config = new GvlUrlConfig("http://sweetcmp.com/").withVersion(version);
+    let config = new GvlUrlConfig();
+    config.baseUrl = "http://sweetcmp.com";
+    config.version = version;
     let promise = Gvl.fromUrl(config);
 
     expect(XMLHttpTestTools.requests.length).to.equal(1);
@@ -150,7 +135,8 @@ describe("Gvl", (): void => {
   });
 
   it("should not request language", async (): Promise<void> => {
-    let config = new GvlUrlConfig("http://sweetcmp.com/");
+    let config = new GvlUrlConfig();
+    config.baseUrl = "http://sweetcmp.com";
     let promise = Gvl.fromUrl(config);
 
     expect(XMLHttpTestTools.requests.length).to.equal(1);
@@ -168,7 +154,8 @@ describe("Gvl", (): void => {
   });
 
   it("should request language", async (): Promise<void> => {
-    let config = new GvlUrlConfig("http://sweetcmp.com/");
+    let config = new GvlUrlConfig();
+    config.baseUrl = "http://sweetcmp.com";
     let promise = Gvl.fromUrl(config);
 
     expect(XMLHttpTestTools.requests.length).to.equal(1);
