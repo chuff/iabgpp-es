@@ -17,12 +17,11 @@ public getGvlFromVendorList(vendorList: VendorList): Gvl {
 public async getGvlFromUrl(gvlUrlConfig: GvlUrlConfig): Promise<Gvl> {
 ````
 
-## Import example
-import {CmpApi} from '@iabgpp/cmpapi';
-
 ## CMP Example
 ````javascript
 <script>
+  import {CmpApi} from '@iabgpp/cmpapi';
+
   const cmpApi = new CmpApi(1, 3);
   cmpApi.setGppString(gppString);
   cmpApi.setFieldValue("uspv1", "OptOutSale", 0);
